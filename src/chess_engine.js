@@ -151,6 +151,9 @@ export class Board {
         this.board[row][column] = piece
     }
 
+    getKingsPositions() {
+    }
+
     movePiece(piece, position) {
         if(!piece instanceof Piece) throw new BoardError('Invalid piece')
         if(!Array.isArray(position)) position = Board.convertPosition(position)

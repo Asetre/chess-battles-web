@@ -1,0 +1,877 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Board should be able to get the position of a tile from the baord 1`] = `"test"`;
+
+exports[`Board should be able to get the position of a tile from the baord 2`] = `"another test"`;
+
+exports[`Board should be able to move a piece on the board 1`] = `
+Array [
+  Array [
+    King {
+      "king": true,
+      "name": "White King",
+      "position": "00",
+      "possibleMoves": Array [],
+      "team": 1,
+      "type": undefined,
+    },
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+]
+`;
+
+exports[`Board should be able to move a piece on the board 2`] = `
+Array [
+  Array [
+    null,
+    null,
+    null,
+    King {
+      "king": true,
+      "name": "White King",
+      "position": "03",
+      "possibleMoves": Array [],
+      "team": 1,
+      "type": undefined,
+    },
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+]
+`;
+
+exports[`Board should export a default baord 1`] = `
+Object {
+  "Bishop": [Function],
+  "Board": [Function],
+  "King": [Function],
+  "Knight": [Function],
+  "Pawn": [Function],
+  "Queen": [Function],
+  "Rook": [Function],
+  "default": Board {
+    "board": Array [
+      Array [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+      ],
+      Array [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+      ],
+      Array [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+      ],
+      Array [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+      ],
+      Array [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+      ],
+      Array [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+      ],
+      Array [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+      ],
+      Array [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+      ],
+    ],
+    "reversed": false,
+  },
+}
+`;
+
+exports[`Board should initialize an empty board and reset the board 1`] = `
+Array [
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+]
+`;
+
+exports[`Board should initialize an empty board and reset the board 2`] = `
+Array [
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  Array [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+]
+`;
+
+exports[`Chess Pieces Valid Moves Bishop Should find valid moves 1`] = `
+Array [
+  "24",
+  "15",
+  "06",
+  "44",
+  "55",
+  "66",
+  "77",
+  "42",
+  "51",
+  "60",
+  "22",
+  "11",
+  "00",
+]
+`;
+
+exports[`Chess Pieces Valid Moves Bishop Should find valid moves 2`] = `
+Array [
+  "02",
+  "22",
+  "33",
+  "44",
+  "55",
+  "66",
+  "77",
+  "20",
+  "00",
+]
+`;
+
+exports[`Chess Pieces Valid Moves Bishop should check assasin valid moves 1`] = `
+Array [
+  "24",
+  "15",
+  "06",
+  "44",
+  "55",
+  "66",
+  "77",
+  "42",
+  "51",
+  "60",
+  "22",
+  "11",
+  "00",
+  "63",
+  "03",
+]
+`;
+
+exports[`Chess Pieces Valid Moves Bishop should check assasin valid moves 2`] = `
+Array [
+  "11",
+  "22",
+  "33",
+  "44",
+  "55",
+  "66",
+  "77",
+  "30",
+]
+`;
+
+exports[`Chess Pieces Valid Moves Bishop should check for collision against enemies 1`] = `
+Array [
+  "11",
+  "22",
+]
+`;
+
+exports[`Chess Pieces Valid Moves Bishop should check for collision against teamates 1`] = `Array []`;
+
+exports[`Chess Pieces Valid Moves King Should check the moves of conqueror 1`] = `
+Array [
+  "13",
+  "35",
+  "53",
+  "31",
+  "32",
+  "44",
+  "43",
+  "42",
+  "34",
+  "22",
+  "23",
+  "24",
+]
+`;
+
+exports[`Chess Pieces Valid Moves King Should check the moves of conqueror 2`] = `
+Array [
+  "02",
+  "20",
+  "11",
+  "10",
+  "01",
+]
+`;
+
+exports[`Chess Pieces Valid Moves King should check for collision against enemies 1`] = `
+Array [
+  "11",
+  "10",
+  "01",
+]
+`;
+
+exports[`Chess Pieces Valid Moves King should check for collision against teamates 1`] = `
+Array [
+  "11",
+  "10",
+]
+`;
+
+exports[`Chess Pieces Valid Moves King should find the valid moves 1`] = `
+Array [
+  "32",
+  "44",
+  "43",
+  "42",
+  "34",
+  "22",
+  "23",
+  "24",
+]
+`;
+
+exports[`Chess Pieces Valid Moves King should find the valid moves 2`] = `
+Array [
+  "11",
+  "10",
+  "01",
+]
+`;
+
+exports[`Chess Pieces Valid Moves Knight Should find valid moves 1`] = `
+Array [
+  "14",
+  "25",
+  "45",
+  "54",
+  "52",
+  "41",
+  "21",
+  "12",
+]
+`;
+
+exports[`Chess Pieces Valid Moves Knight Should find valid moves 2`] = `
+Array [
+  "12",
+  "21",
+]
+`;
+
+exports[`Chess Pieces Valid Moves Knight should check for collision against enemies 1`] = `
+Array [
+  "12",
+  "21",
+]
+`;
+
+exports[`Chess Pieces Valid Moves Knight should check for collision against teamates 1`] = `
+Array [
+  "21",
+]
+`;
+
+exports[`Chess Pieces Valid Moves Knight should check the valid moves of a class of knight 1`] = `
+Array [
+  "13",
+  "35",
+  "53",
+  "31",
+  "14",
+  "25",
+  "45",
+  "54",
+  "52",
+  "41",
+  "21",
+  "12",
+]
+`;
+
+exports[`Chess Pieces Valid Moves Knight should check the valid moves of a class of knight 2`] = `
+Array [
+  "02",
+  "20",
+  "12",
+  "21",
+]
+`;
+
+exports[`Chess Pieces Valid Moves Pawn Should check valid attacks 1`] = `
+Array [
+  "20",
+  "21",
+]
+`;
+
+exports[`Chess Pieces Valid Moves Pawn Should check valid moves with first move 1`] = `
+Array [
+  "40",
+  "50",
+]
+`;
+
+exports[`Chess Pieces Valid Moves Pawn Should check valid moves with first move 2`] = `
+Array [
+  "30",
+  "20",
+]
+`;
+
+exports[`Chess Pieces Valid Moves Pawn should check Mercenary valid moves 1`] = `
+Array [
+  "62",
+  "60",
+  "41",
+  "51",
+]
+`;
+
+exports[`Chess Pieces Valid Moves Pawn should check Mercenary valid moves 2`] = `
+Array [
+  "12",
+  "10",
+  "31",
+  "21",
+]
+`;
+
+exports[`Chess Pieces Valid Moves Queen Should find valid moves 1`] = `
+Array [
+  "01",
+  "02",
+  "03",
+  "04",
+  "05",
+  "06",
+  "07",
+  "11",
+  "22",
+  "33",
+  "44",
+  "55",
+  "66",
+  "77",
+  "10",
+  "20",
+  "30",
+  "40",
+  "50",
+  "60",
+  "70",
+]
+`;
+
+exports[`Chess Pieces Valid Moves Queen Should find valid moves 2`] = `
+Array [
+  "01",
+  "02",
+  "12",
+  "13",
+  "14",
+  "15",
+  "16",
+  "17",
+  "22",
+  "33",
+  "44",
+  "55",
+  "66",
+  "77",
+  "21",
+  "31",
+  "41",
+  "51",
+  "61",
+  "71",
+  "20",
+  "10",
+  "00",
+]
+`;
+
+exports[`Chess Pieces Valid Moves Queen should check for collision against enemies 1`] = `
+Array [
+  "01",
+  "11",
+  "10",
+  "20",
+  "30",
+  "40",
+  "50",
+  "60",
+  "70",
+]
+`;
+
+exports[`Chess Pieces Valid Moves Queen should check for collision against teamates 1`] = `
+Array [
+  "11",
+  "22",
+  "33",
+  "44",
+  "55",
+  "66",
+  "77",
+]
+`;
+
+exports[`Chess Pieces Valid Moves Rook Should find valid moves 1`] = `
+Array [
+  "23",
+  "13",
+  "03",
+  "34",
+  "35",
+  "36",
+  "37",
+  "43",
+  "53",
+  "63",
+  "73",
+  "32",
+  "31",
+  "30",
+]
+`;
+
+exports[`Chess Pieces Valid Moves Rook Should find valid moves 2`] = `
+Array [
+  "01",
+  "02",
+  "03",
+  "04",
+  "05",
+  "06",
+  "07",
+  "10",
+  "20",
+  "30",
+  "40",
+  "50",
+  "60",
+  "70",
+]
+`;
+
+exports[`Chess Pieces Valid Moves Rook should check for collision against enemies 1`] = `
+Array [
+  "01",
+  "10",
+  "20",
+  "30",
+  "40",
+  "50",
+  "60",
+  "70",
+]
+`;
+
+exports[`Chess Pieces Valid Moves Rook should check for collision against teamates 1`] = `
+Array [
+  "01",
+  "02",
+  "03",
+  "04",
+  "05",
+  "06",
+  "07",
+]
+`;
+
+exports[`Chess Pieces Valid Moves Rook should check the valid moves of a Crusader 1`] = `
+Array [
+  "23",
+  "13",
+  "03",
+  "34",
+  "35",
+  "36",
+  "37",
+  "43",
+  "53",
+  "63",
+  "73",
+  "32",
+  "31",
+  "30",
+  "24",
+  "44",
+  "42",
+  "22",
+]
+`;
+
+exports[`Chess Pieces Valid Moves Rook should check the valid moves of a Crusader 2`] = `
+Array [
+  "01",
+  "02",
+  "03",
+  "04",
+  "05",
+  "06",
+  "07",
+  "10",
+  "20",
+  "30",
+  "40",
+  "50",
+  "60",
+  "70",
+  "11",
+]
+`;

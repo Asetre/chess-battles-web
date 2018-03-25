@@ -25,20 +25,6 @@ export class Board {
         this.fillBoardWithEmptyTiles()
     }
 
-    //Check if one or more kings are in check, if true return an array of positions
-    kingsPositions() {
-        const pos = []
-        this.board.forEach((row, rI) => {
-            row.forEach((col, cI) => {
-                if(col) {
-                    col.king && pos.push(`${rI, cI}`)
-                }
-            })
-        })
-
-        return pos.length === 0 ? null : pos
-    }
-
     //Populate the board matrix with empty tiles
     fillBoardWithEmptyTiles() {
         //Each tile is represented as a null object
@@ -152,6 +138,15 @@ export class Board {
     }
 
     getKingsPositions() {
+        //Find the positions of the black and white kigns then reduce into an array of their positions
+        const kings = this.board.reduce((acc, curr) => {
+            if(curr) {
+                if(curr.king) acc.push(curr.position)
+            }
+            return acc
+        }, [])
+        //If kings are not found return false
+        return kings.length > 0 ? kings : false
     }
 
     movePiece(piece, position) {

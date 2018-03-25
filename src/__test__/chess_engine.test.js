@@ -167,6 +167,12 @@ describe('Board', () => {
     })
 
     it('should be able to find the Kings positions', () => {
+        const king = new Chess.King(1)
+        const king2 = new Chess.King(0)
+
+        Board.placePiece(king, '00')
+        Board.placePiece(king2, '66')
+        
     })
 
 })

@@ -3,8 +3,7 @@ import {connect} from 'react-redux'
 import styled from 'styled-components'
 
 //Components
-import Hero from './hero'
-import Demo from './demo_board'
+import Hero from './components/hero'
 
 const StyledLanding = styled.div`
 `
@@ -13,7 +12,6 @@ var LandingPage = (props) => {
     return(
         <StyledLanding>
             <Hero />
-            <Demo />
         </StyledLanding>
     )
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 
 import styled from 'styled-components'
-import img from '../assets/battle-1846807_1280.jpg'
+import img from '../../../assets/battle-1846807_1280.jpg'
 
 const Hero = styled.div`
     width: 100%;

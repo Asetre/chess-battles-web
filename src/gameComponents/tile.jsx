@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import {connect} from 'react-redux'
-import Chess from '../chess_engine'
+import Chess from '../chessEngine/chess_engine'
 
 const checkeredColor = 'palevioletred'
 
@@ -10,8 +10,6 @@ const StyledTile = styled.div`
     height: 100px;
     border: 1px solid green;
     background-color: ${props => {
-        //If the tile needs to be highlighted return the highlight color
-        //else we style a checkered board
         if(props.highlight) return 'red'
         const position = props.position.split('').map(str => parseInt(str, 10))
         const row = position[0], column = position[1]

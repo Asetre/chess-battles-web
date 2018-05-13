@@ -9,6 +9,9 @@ const StyledTile = styled.div`
 width: 12.5%;
 height: 0;
 padding-bottom: 12.5%;
+display: flex;
+align-items: center;
+justify-content: center;
 background-color: ${props => {
   if(props.highlight) return 'red'
   const position = props.position.split('').map(str => parseInt(str, 10))
@@ -22,20 +25,31 @@ background-color: ${props => {
     if(row % 2 === 0) {
       if(column === 0) return null
       return column % 2 !== 0 ? checkeredColor : null
-    }else {
+    }else {4
       if(column === 0) return checkeredColor
       return column % 2 !== 0 ? null : checkeredColor
     }
   }
-}}
+}};
 `
 
-export const Tile =  props => {
+const StyledPieceImg = styled.div`
+width: 85%;
+margin: 0;
+margin-top: 85%;
+padding-bottom: 85%;
+background-image: url(${props => props.src});
+background-position: center;
+background-size: contain;
+background-repeat: no-repeat;
+`
+
+const Tile =  props => {
   return(
     <StyledTile {...props} onClick={() => props.handleTileClick(props.position)}>
-    {props.img ? <img class='pieceImg' src={props.img} alt=""/> : props.position}
-  </StyledTile>
-)
+    {props.img ? <StyledPieceImg src={props.img}></StyledPieceImg> : null}
+    </StyledTile>
+  )
 }
 
 const stateToProps = state => {

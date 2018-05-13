@@ -20,7 +20,7 @@ import wP from '../assets/wP.png'
 import Tile from './tile'
 
 const StyledBoard = styled.div`
-width: 816px;
+width: 80%;
 border: 1px solid red;
 display: flex;
 flex-wrap: wrap;
@@ -58,7 +58,6 @@ class Board extends React.Component {
       const piece = Chess.getPosition(position)
       if(piece) {
         const validMoves = piece.findValidMoves(Chess)
-        console.log('react',validMoves)
         this.props.updatePieceSelected(piece.position)
         this.props.updateValidMoves(validMoves)
       }

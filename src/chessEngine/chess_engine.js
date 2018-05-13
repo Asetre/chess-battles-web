@@ -281,8 +281,10 @@ class Piece {
             }
             else if(!this.isSameTeam(board.getPosition(pos))) {
               newDir.push(Board.positionToString(pos))
-              if(this.piece.name !== 'White Pawn' || this.piece.name !== 'Black Pawn')
-              throw 'break direction iteration'
+              if(this.name === 'White Pawn' || this.name === 'Black Pawn') {
+              }else {
+                throw 'break direction iteration'
+              }
             }else if(this.isSameTeam(board.getPosition(pos))) {
               throw 'break direction iteration'
             }
@@ -542,63 +544,54 @@ export class Pawn extends Piece {
       }).filter(Boolean)
       this.possibleMoves.push(possibleSpecialMove)
     }
-    /*
-    const adjacentTiles = [[row, column + 1], [row, column - 1]].map(pos => {
-    if(Board.isOffBoard(pos)) return false
-    return pos
-  }).filter(Boolean)
+    if(this.firstMove) {
+      if(this.team === 1) {
+        if(board.isTileEmpty([row - 1, column])) {
+          this.possibleMoves.push([[row - 2, column]])
+        }
+      }else {
+        if(board.isTileEmpty([row + 1, column])) {
+          this.possibleMoves.push([[row + 2, column]])
+        }
+      }
+    }
 
-  //Check if en Passant is possible
-  const checkAdjacentTiles = this.checkAdjacentTiles(adjacentTiles, board)
-  if(checkAdjacentTiles) this.possibleMoves.push(checkAdjacentTiles)
-  */
-  if(this.firstMove) {
     if(this.team === 1) {
-      if(board.isTileEmpty([row - 1, column])) {
-        this.possibleMoves.push([[row - 2, column]])
+      let possibleAttacks = [[row - 1, column - 1], [row - 1, column + 1]].map(pos => {
+        if(!Board.isOffBoard(pos)) {
+          if(!board.isTileEmpty(pos)) {
+            if(!this.isSameTeam(board.getPosition(pos))) {
+              return pos
+            }
+          }
+        }
+      }).filter(Boolean)
+
+      this.possibleMoves.push(possibleAttacks)
+      if(!Board.isOffBoard([row - 1, column])) {
+        if(board.isTileEmpty([row - 1, column])) {
+          this.possibleMoves.push([[row - 1, column]])
+        }
       }
     }else {
-      if(board.isTileEmpty([row + 1, column])) {
-        this.possibleMoves.push([[row + 2, column]])
-      }
-    }
-  }
-  if(this.team === 1) {
-    let possibleAttacks = [[row - 1, column - 1], [row - 1, column + 1]].map(pos => {
-      if(!Board.isOffBoard(pos)) {
-        if(!board.isTileEmpty(pos)) {
-          if(!this.isSameTeam(board.getPosition(pos))) {
-            return pos
+      let possibleAttacks = [[row + 1, column - 1], [row + 1, column + 1]].map(pos => {
+        if(!Board.isOffBoard(pos)) {
+          if(!board.isTileEmpty(pos)) {
+            if(!this.isSameTeam(board.getPosition(pos))) {
+              return pos
+            }
           }
         }
-      }
-    }).filter(Boolean)
-
-    this.possibleMoves.push(possibleAttacks)
-    if(!Board.isOffBoard([row - 1, column])) {
-      if(board.isTileEmpty([row - 1, column])) {
-        this.possibleMoves.push([[row - 1, column]])
-      }
-    }
-  }else {
-    let possibleAttacks = [[row + 1, column - 1], [row + 1, column + 1]].map(pos => {
-      if(!Board.isOffBoard(pos)) {
-        if(!board.isTileEmpty(pos)) {
-          if(!this.isSameTeam(board.getPosition(pos))) {
-            return pos
-          }
+      }).filter(Boolean)
+      this.possibleMoves.push(possibleAttacks)
+      if(!Board.isOffBoard([row + 1, column])) {
+        if(board.isTileEmpty([row + 1, column])) {
+          this.possibleMoves.push([[row + 1, column]])
         }
       }
-    }).filter(Boolean)
-    this.possibleMoves.push(possibleAttacks)
-    if(!Board.isOffBoard([row + 1, column])) {
-      if(board.isTileEmpty([row + 1, column])) {
-        this.possibleMoves.push([[row + 1, column]])
-      }
     }
+    return this.possibleMoves
   }
-  return this.possibleMoves
-}
 }
 
 var defaultBoard = new Board()

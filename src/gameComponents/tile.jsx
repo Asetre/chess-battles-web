@@ -30,19 +30,12 @@ background-color: ${props => {
 }}
 `
 
-const PieceImg = styled.div`
-width: 80%;
-height: 80%;
-background-image: url(${props => props.img ? props.img : null})
-`
-
 export const Tile =  props => {
   return(
     <StyledTile {...props} onClick={() => props.handleTileClick(props.position)}>
-    <PieceImg img={props.img}>
-    </PieceImg>
-    </StyledTile>
-  )
+    {props.img ? <img class='pieceImg' src={props.img} alt=""/> : props.position}
+  </StyledTile>
+)
 }
 
 const stateToProps = state => {

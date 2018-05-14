@@ -42,7 +42,6 @@ class Board extends React.Component {
   gameTileClick() {
   }
 
-
   demoTileClick(position) {
     if(this.props.pieceSelected) {
       if(this.props.validMoves.find(pos => pos === position)) {

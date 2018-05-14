@@ -4,6 +4,7 @@ import styled from 'styled-components'
 
 //Components
 import Hero from './components/hero'
+import DemoBoard from '../../gameComponents/demo-board'
 
 const StyledLanding = styled.div`
 `
@@ -12,6 +13,7 @@ var LandingPage = (props) => {
     return(
         <StyledLanding>
             <Hero />
+            <DemoBoard />
         </StyledLanding>
     )
 }

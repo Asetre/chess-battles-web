@@ -7,6 +7,7 @@ import Navbar from '../components/navbar'
 
 //routes
 import LandingPage from './landing/main'
+import auth0Redirect from './auth0-redirect/main'
 
 export default function AppRouter() {
   return (
@@ -14,6 +15,7 @@ export default function AppRouter() {
       <div className="App">
         <Navbar />
         <Route exact path='/' component={LandingPage} />
+        <Route exact path='/callback' component={auth0Redirect}
       </div>
     </Router>
   )

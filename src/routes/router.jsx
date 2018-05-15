@@ -4,10 +4,17 @@ import React, { Component } from 'react'
 
 //Global components
 import Navbar from '../components/navbar'
+import ProtectedRoute from '../components/protectedRoute'
 
 //routes
 import LandingPage from './landing/main'
-import auth0Redirect from './auth0-redirect/main'
+import Auth from './auth0-redirect/main'
+
+const TestComponent = () => {
+  return(
+    <h1>Test Component</h1>
+  )
+}
 
 export default function AppRouter() {
   return (
@@ -15,7 +22,8 @@ export default function AppRouter() {
       <div className="App">
         <Navbar />
         <Route exact path='/' component={LandingPage} />
-        <Route exact path='/callback' component={auth0Redirect}
+        <Route path='/callback' component={Auth} />
+        <ProtectedRoute path='/test' component={LandingPage} />
       </div>
     </Router>
   )

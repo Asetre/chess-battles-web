@@ -46,11 +46,11 @@ class Navbar extends React.Component {
   }
 }
 
-var stateToProps = state => {
+const stateToProps = state => {
   return {}
 }
 
-var dispatchToProps = dispatch => {
+const dispatchToProps = dispatch => {
   return {}
 }
 

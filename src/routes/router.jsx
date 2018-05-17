@@ -8,7 +8,7 @@ import ProtectedRoute from '../components/protectedRoute'
 
 //routes
 import LandingPage from './landing/main'
-import Auth from './auth0-redirect/main'
+import HandleAuth from './auth0-redirect/main'
 
 const TestComponent = () => {
   return(
@@ -22,7 +22,7 @@ export default function AppRouter() {
       <div className="App">
         <Navbar />
         <Route exact path='/' component={LandingPage} />
-        <Route path='/callback' component={Auth} />
+        <Route path='/callback' component={HandleAuth} />
         <ProtectedRoute path='/test' component={LandingPage} />
       </div>
     </Router>

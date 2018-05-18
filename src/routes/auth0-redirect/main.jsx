@@ -10,17 +10,21 @@ const HandleAuth = (props) => {
 }
 
 const authenticationHandler = (nextState, replace) => {
-  console.log(nextState)
   if (/access_token|id_token|error/.test(nextState.location.hash)) {
-    auth.handleAuthentication();
-  }
-
-  if(auth.isAuthenticated()) {
-    return <Redirect to='/' />
+    auth.handleAuthentication()
+    return auth.getProfile()
+    .then(profile => {
+      if(profile && auth.isAuthenticated()) {
+        //grab userprofile from db
+        return <Redirect to='/' />
+      }
+    })
+    .catch(err => {
+      console.log(err)
+      return <Redirect to ='/' />
+    })
   }else {
-    return(
-      <h1>Failed auth</h1>
-    )
+    return <Redirect to ='/' />
   }
 }
 

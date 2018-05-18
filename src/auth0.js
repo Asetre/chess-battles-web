@@ -45,4 +45,17 @@ export default class Auth {
     let expiresAt = JSON.parse(localStorage.getItem('expires_at'));
     return new Date().getTime() < expiresAt;
   }
+
+  getProfile() {
+    const accessToken = localStorage.getItem('access_token')
+
+    return new Promise((resolve, reject) => {
+      this.auth0.client.userInfo(accessToken, (err, profile) => {
+        if(err) reject(err)
+        if(!profile) reject('unable to retrieve profile')
+        if(profile) resolve(profile)
+      })
+    })
+
+  }
 }

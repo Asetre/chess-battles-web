@@ -23,7 +23,6 @@ export default function AppRouter() {
         <Navbar />
         <Route exact path='/' component={LandingPage} />
         <Route path='/callback' component={HandleAuth} />
-        <ProtectedRoute path='/test' component={LandingPage} />
       </div>
     </Router>
   )

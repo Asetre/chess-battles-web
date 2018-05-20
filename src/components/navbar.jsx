@@ -2,18 +2,16 @@ import React from 'react'
 import {connect} from 'react-redux'
 import styled from 'styled-components'
 import Auth from '../auth0.js'
+import Btn from './button'
 
 const StyledNavbar = styled.div`
-color: red;
-font-size: 200%;
+display: flex;
+align-items: center;
 `
 
 const Logo = styled.a`
-`
-
-const Button = styled.button`
-width: 145px;
-height: 30px;
+color: red;
+font-size: 200%;
 `
 
 class Navbar extends React.Component {
@@ -35,19 +33,20 @@ class Navbar extends React.Component {
   render() {
     return(
       <StyledNavbar>
-      <Logo>
-      Chess Battles
-      </Logo>
+        <Logo>
+          Chess Battles
+        </Logo>
 
-      <Button onClick={this.handleSignup}>Signup</Button>
-      <Button onClick={this.handleLogin}>Login</Button>
+        <Btn text='test' size='nav' onClick={this.handleLogin}></Btn>
       </StyledNavbar>
     )
   }
 }
 
 const stateToProps = state => {
-  return {}
+  return {
+    user: state.user
+  }
 }
 
 const dispatchToProps = dispatch => {

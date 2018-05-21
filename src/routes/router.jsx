@@ -7,14 +7,9 @@ import Navbar from '../components/navbar'
 import ProtectedRoute from '../components/protectedRoute'
 
 //routes
-import LandingPage from './landing/main'
+import Dashboard from './dashboard/main'
 import HandleAuth from './auth0-redirect/main'
-
-const TestComponent = () => {
-  return(
-    <h1>Test Component</h1>
-  )
-}
+import LandingPage from './landing/main'
 
 export default function AppRouter() {
   return (
@@ -23,6 +18,7 @@ export default function AppRouter() {
         <Navbar />
         <Route exact path='/' component={LandingPage} />
         <Route path='/callback' component={HandleAuth} />
+        <ProtectedRoute path='/dashboard' component={Dashboard}></ProtectedRoute>
       </div>
     </Router>
   )

@@ -14,17 +14,22 @@ text-align: center;
 
 const MediumBtn = styled.div`
 text-align: center;
+border: 1px solid green;
+width: 400px;
+font-size: 20px;
+padding: 10px 0;
 `
 
 const LargeBtn = styled.div`
 text-align: center;
+border: 1px solid blue;
 `
 
 export default (props) => {
   switch (props.size) {
     case 'nav':
     return(
-      <NavBtn>
+      <NavBtn onClick={props.onClick}>
         <p>{props.text}</p>
       </NavBtn>
     )
@@ -39,14 +44,14 @@ export default (props) => {
     case 'meduim':
     return(
       <MediumBtn>
-        <p>{this.props.text}</p>
+        <p>{props.text}</p>
       </MediumBtn>
     )
 
     case 'large':
     return(
       <LargeBtn>
-        <p>{this.props.text}</p>
+        <p>{props.text}</p>
       </LargeBtn>
     )
 

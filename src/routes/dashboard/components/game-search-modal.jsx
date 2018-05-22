@@ -25,7 +25,7 @@ class GameSearchModal extends React.Component {
   }
 
   findGame() {
-    console.log('searching for game')
+    console.log(this.props)
     return axios.post(`${serverUrl}/game/findGame`, {
       user: this.props.user
     })
@@ -50,6 +50,7 @@ class GameSearchModal extends React.Component {
 }
 
 const stateToProps = (state) => {
+  console.log(state)
   return {
     user: state.user
   }

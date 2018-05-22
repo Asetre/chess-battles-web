@@ -26,7 +26,7 @@ class HandleAuth extends React.Component {
       .then(profile => {
         if(profile && auth.isAuthenticated()) {
           if(profile.sub) {
-            axios.get(`http://localhost:8000/users/login/${profile.sub}/${profile.nickname}`)
+            axios.get(`${serverUrl}/users/login/${profile.sub}/${profile.nickname}`)
             .then(res => {
               if(res.status !== 200) throw 'Failed to get user profile'
               this.props.updateUserProfile(res.data)

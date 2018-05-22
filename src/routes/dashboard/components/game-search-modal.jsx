@@ -3,6 +3,8 @@ import {connect} from 'react-redux'
 import {Redirect} from 'react-router-dom'
 import styled from 'styled-components'
 import Btn from '../../../components/button'
+import {serverUrl} from '../../../config'
+import axios from 'axios'
 
 const StyledGameSearchModal = styled.div`
 `
@@ -22,7 +24,12 @@ class GameSearchModal extends React.Component {
     this.setState({selectedClass: e.target.value})
   }
 
-  findGame()  {
+  findGame() {
+    console.log('searching for game')
+    return axios.post(`${serverUrl}/game/findGame`, {
+      user: this.props.user
+    })
+    .then(res => console.log(res))
   }
 
   render() {
@@ -43,7 +50,9 @@ class GameSearchModal extends React.Component {
 }
 
 const stateToProps = (state) => {
-  return {}
+  return {
+    user: state.user
+  }
 }
 
 const dispatchToProps = (dispatch) => {

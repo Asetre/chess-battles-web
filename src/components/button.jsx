@@ -41,9 +41,9 @@ export default (props) => {
       </SmallBtn>
     )
 
-    case 'meduim':
+    case 'medium':
     return(
-      <MediumBtn>
+      <MediumBtn onClick={props.onClick}>
         <p>{props.text}</p>
       </MediumBtn>
     )

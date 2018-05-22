@@ -25,10 +25,15 @@ class GameSearchModal extends React.Component {
   }
 
   findGame() {
-    console.log(this.props)
-    return axios.post(`${serverUrl}/game/findGame`, {
-      user: this.props.user
-    })
+    let props = this.props
+
+    let matchMakingInfo = {
+      id: props.user._id,
+      username: props.user.username,
+      selectedClass: this.state.selectedClass
+    }
+
+    return axios.post(`${serverUrl}/game/findGame`, matchMakingInfo)
     .then(res => console.log(res))
   }
 

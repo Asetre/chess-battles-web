@@ -12,8 +12,8 @@ const StyledGameSearchModal = styled.div`
 `
 
 class GameSearchModal extends React.Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
       selectedClass: 'Assasin',
       matchMakingQueId: null
@@ -35,6 +35,10 @@ class GameSearchModal extends React.Component {
 
   findGame() {
     let props = this.props
+    console.log(props.location)
+    console.log('........................')
+    console.log(props.history)
+
     const {user} = props
 
     let matchMakingInfo = {
@@ -56,7 +60,6 @@ class GameSearchModal extends React.Component {
       this.matchMakingRef.on('value', (snap) => {
         const userQue = snap.val()
         if(userQue.matchFound) {
-          console.log('match found')
         }
       })
     })

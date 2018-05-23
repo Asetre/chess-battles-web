@@ -1,29 +1,36 @@
 import React from 'react'
+import {Redirect} from 'react-router-dom'
 import {connect} from 'react-redux'
 import styled from 'styled-components'
 
-//Components
-import Hero from './hero'
-import Demo from './demo_board'
+import Btn from '../../components/button'
+import GameSearchModal from './components/game-search-modal'
 
-const StyledLanding = styled.div`
+const StyledDashboard = styled.div`
 `
 
-var LandingPage = (props) => {
+class Dashboard extends React.Component {
+  constructor(){
+    super()
+  }
+
+  render() {
     return(
-        <StyledLanding>
-            <Hero />
-            <Demo />
-        </StyledLanding>
+      <StyledDashboard>
+        <h1>Dashboard</h1>
+        <Btn text='Play' size='meduim'></Btn>
+        <GameSearchModal></GameSearchModal>
+      </StyledDashboard>
     )
+  }
 }
 
-var stateToProps = state => {
-    return {}
+const stateToProps = (state) => {
+  return{}
 }
 
-var dispatchToProps = dispatch => {
-    return {}
+const dispatchToProps = (dispatch) => {
+  return{}
 }
 
-export default connect(stateToProps, dispatchToProps)(LandingPage)
+export default connect(stateToProps, dispatchToProps)(Dashboard)

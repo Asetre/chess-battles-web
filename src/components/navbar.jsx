@@ -1,47 +1,56 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import styled from 'styled-components'
+import Auth from '../auth0.js'
+import Btn from './button'
 
 const StyledNavbar = styled.div`
-    color: red;
-    font-size: 200%;
+display: flex;
+align-items: center;
 `
 
 const Logo = styled.a`
+color: red;
+font-size: 200%;
 `
 
-const Button = styled.button`
-    width: 145px;
-    height: 30px;
-`
+class Navbar extends React.Component {
+  constructor() {
+    super()
+    this.handleLogin = this.handleLogin.bind(this)
+    this.handleSignup = this.handleSignup.bind(this)
+    this.auth = new Auth()
+  }
 
-var Navbar = props => {
-    const handleLogin = () => {
-        console.log('login')
-    }
+  handleLogin() {
+    this.auth.login()
+  }
 
-    const handleSignup = () => {
-        console.log('signup')
-    }
+  handleSignup() {
+    this.auth.login()
+  }
 
+  render() {
     return(
-        <StyledNavbar>
-            <Logo>
-                Chess Battles
-            </Logo>
+      <StyledNavbar>
+        <Logo>
+          Chess Battles
+        </Logo>
 
-            <Button onClick={handleSignup}>Signup</Button>
-            <Button onClick={handleLogin}>Login</Button>
-        </StyledNavbar>
+        <Btn text='test' size='nav' onClick={this.handleLogin}></Btn>
+      </StyledNavbar>
     )
+  }
 }
 
-var stateToProps = state => {
-    return {}
+const stateToProps = state => {
+  return {
+    user: state.user
+  }
 }
 
-var dispatchToProps = dispatch => {
-    return {}
+const dispatchToProps = dispatch => {
+  return {}
 }
 
 export default connect(stateToProps, dispatchToProps)(Navbar)

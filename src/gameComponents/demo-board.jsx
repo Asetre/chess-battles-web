@@ -13,6 +13,7 @@ const StyledDemo = styled.div`
 `
 const Demo = props => {
   //Initialize chess board
+  Chess.resetBoard()
   Chess.setUpGame('Mercenary', 'Crusader')
 
   const config = {

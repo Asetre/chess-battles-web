@@ -13,11 +13,13 @@ class GameSearchModal extends React.Component {
   constructor() {
     super()
     this.state = {
-      selectedClass: 'Assasin'
+      selectedClass: 'Assasin',
+      matchMakingQueId: null
     }
 
     this.findGame = this.findGame.bind(this)
     this.handleSelectChange = this.handleSelectChange.bind(this)
+    this.cancelMatchMaking = this.cancelMatchMaking.bind(this)
   }
 
   handleSelectChange(e) {
@@ -36,11 +38,19 @@ class GameSearchModal extends React.Component {
       loss: user.loss
     }
 
-  console.log(matchMakingInfo)
-
     return axios.post(`${serverUrl}/game/findGame`, matchMakingInfo)
-    .then(res => console.log(res))
+    .then((res) => {
+      this.setState({matchMakingQueId: res.data})
+    })
   }
+
+  cancelMatchMaking() {
+    return axios.post(`${serverUrl}/game/cancelMatchMaking/${this.state.matchMakingQueId}`)
+    .then((res) => {
+    })
+  }
+
+
 
 
   render() {
@@ -54,7 +64,8 @@ class GameSearchModal extends React.Component {
           <option value="Mercenary">Mercenary</option>
         </select>
 
-        <Btn text='Search for game' size='medium' onClick={this.findGame}></Btn>
+        <Btn text='Search for game' size='medium' onClick={this.findGame}/>
+        <Btn text='Cancel search' size='medium' onClick={this.cancelMatchMaking} />
       </StyledGameSearchModal>
     )
   }

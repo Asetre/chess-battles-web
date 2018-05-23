@@ -2,6 +2,7 @@ import React from 'react'
 import {Redirect, Link} from 'react-router-dom'
 import {connect} from 'react-redux'
 import styled from 'styled-components'
+import firebase from 'firebase'
 
 //components
 import GameBoard from '../../gameComponents/game-board'
@@ -9,12 +10,15 @@ import GameBoard from '../../gameComponents/game-board'
 const StyledBoard = styled.div`
 `
 class Game extends React.Component {
-  constructor() {
+  constructor({match}) {
     super()
+    this.gameID = match.params.gameID
+    console.log(this.gameID)
   }
 
   componentDidMount() {
-    //add listeners
+    this.database = firebase.database()
+    this.gameRef = this.database.ref()
   }
 
   componentWillUnmount() {

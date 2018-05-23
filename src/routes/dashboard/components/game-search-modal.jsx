@@ -5,6 +5,8 @@ import styled from 'styled-components'
 import Btn from '../../../components/button'
 import {serverUrl} from '../../../config'
 import axios from 'axios'
+import firebase from 'firebase'
+import * as actions from '../../../redux/actions'
 
 const StyledGameSearchModal = styled.div`
 `
@@ -17,9 +19,14 @@ class GameSearchModal extends React.Component {
       matchMakingQueId: null
     }
 
+    this.matchMakingRef = null
     this.findGame = this.findGame.bind(this)
     this.handleSelectChange = this.handleSelectChange.bind(this)
     this.cancelMatchMaking = this.cancelMatchMaking.bind(this)
+  }
+
+  componentDidMount() {
+    this.database = firebase.database()
   }
 
   handleSelectChange(e) {
@@ -31,16 +38,27 @@ class GameSearchModal extends React.Component {
     const {user} = props
 
     let matchMakingInfo = {
-      id: user._id,
-      username: user.username,
-      selectedClass: this.state.selectedClass,
-      win: user.win,
-      loss: user.loss
+      user: {
+        id: user._id,
+        username: user.username,
+        selectedClass: this.state.selectedClass,
+        win: user.win,
+        loss: user.loss
+      },
+      matchFound: false,
+      gameID: null
     }
 
     return axios.post(`${serverUrl}/game/findGame`, matchMakingInfo)
     .then((res) => {
       this.setState({matchMakingQueId: res.data})
+      this.matchMakingRef = this.database.ref(`/match-making-que/${this.state.matchMakingQueId}`)
+      this.matchMakingRef.on('value', (snap) => {
+        const userQue = snap.val()
+        if(userQue.matchFound) {
+          console.log('match found')
+        }
+      })
     })
   }
 
@@ -50,8 +68,8 @@ class GameSearchModal extends React.Component {
     })
   }
 
-
-
+  componentWillUnmount() {
+  }
 
   render() {
     return(
@@ -72,14 +90,17 @@ class GameSearchModal extends React.Component {
 }
 
 const stateToProps = (state) => {
-  console.log(state)
   return {
     user: state.user
   }
 }
 
 const dispatchToProps = (dispatch) => {
-  return {}
+  return {
+    updateGameID: (id) => {
+      dispatch(actions.updateGameID(id))
+    }
+  }
 }
 
 export default connect(stateToProps, dispatchToProps)(GameSearchModal)

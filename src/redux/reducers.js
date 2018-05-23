@@ -4,9 +4,9 @@ export var initialBoardState = {
   user: null,
   board: null,
   validMoves: [],
-  pieceSelected: null
+  pieceSelected: null,
+  gameID: null
 }
-
 
 export default function reducer(state=initialBoardState, action) {
 
@@ -24,6 +24,9 @@ export default function reducer(state=initialBoardState, action) {
 
     case actions.update_user_profile:
     return {...state, user: payload}
+
+    case actions.update_game_id:
+    return {...state, gameID: payload}
 
     default:
     return state

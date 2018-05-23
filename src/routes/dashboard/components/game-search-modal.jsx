@@ -37,6 +37,7 @@ class GameSearchModal extends React.Component {
     }
 
   console.log(matchMakingInfo)
+
     return axios.post(`${serverUrl}/game/findGame`, matchMakingInfo)
     .then(res => console.log(res))
   }

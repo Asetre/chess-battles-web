@@ -44,7 +44,7 @@ background-size: contain;
 background-repeat: no-repeat;
 `
 
-const Tile =  props => {
+const Tile =  (props) => {
   return(
     <StyledTile {...props} onClick={() => props.handleTileClick(props.position)}>
     {props.img ? <StyledPieceImg src={props.img}></StyledPieceImg> : null}
@@ -52,12 +52,4 @@ const Tile =  props => {
   )
 }
 
-const stateToProps = state => {
-  return {}
-}
-
-const dispatchToProps = dispatch => {
-  return {}
-}
-
-export default connect(stateToProps, dispatchToProps)(Tile)
+export default  Tile

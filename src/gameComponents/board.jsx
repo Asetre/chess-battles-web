@@ -1,8 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import Chess, * as Engine from '../chessEngine/chess_engine'
-import {connect} from 'react-redux'
-import * as actions from '../redux/actions'
+
 //Images
 import bK from '../assets/bK.png'
 import bR from '../assets/bR.png'
@@ -35,32 +34,50 @@ class Board extends React.Component {
     super()
     this.gameTileClick = this.gameTileClick.bind(this)
     this.demoTileClick = this.demoTileClick.bind(this)
-
+    this.updatePieceSelected = this.updatePieceSelected.bind(this)
+    this.updateValidMoves = this.updateValidMoves.bind(this)
     this.handleTileClick = props.demo ? this.demoTileClick : this.gameTileClick
+
+    this.state = {
+      selectedPiece: null,
+      validMoves: []
+    }
   }
 
   gameTileClick() {
   }
 
   demoTileClick(position) {
-    if(this.props.pieceSelected) {
-      if(this.props.validMoves.find(pos => pos === position)) {
-        const piece = Chess.getPosition(this.props.pieceSelected)
+    if(this.state.selectedPiece) {
+      if(this.state.validMoves.find(pos => pos === position)) {
+        const piece = Chess.getPosition(this.state.selectedPiece)
         Chess.movePiece(piece, position)
-        this.props.updatePieceSelected(null)
-        this.props.updateValidMoves([])
+        this.updatePieceSelected(null)
+        this.updateValidMoves([])
       }else {
-        this.props.updatePieceSelected(null)
-        this.props.updateValidMoves([])
+        this.updatePieceSelected(null)
+        this.updateValidMoves([])
       }
     }else {
       const piece = Chess.getPosition(position)
       if(piece) {
         const validMoves = piece.findValidMoves(Chess)
-        this.props.updatePieceSelected(piece.position)
-        this.props.updateValidMoves(validMoves)
+        this.updatePieceSelected(piece.position)
+        this.updateValidMoves(validMoves)
       }
     }
+  }
+
+  updatePieceSelected(position) {
+    this.setState({
+      selectedPiece: position
+    })
+  }
+
+  updateValidMoves(validMoves) {
+    this.setState({
+      validMoves: validMoves
+    })
   }
 
   render() {
@@ -78,30 +95,15 @@ class Board extends React.Component {
               handleTileClick: this.handleTileClick,
               position: position,
               tile: tile,
-              highlight: this.props.validMoves.find(pos => pos === position) ? true : false,
+              highlight: this.state.validMoves.find(pos => pos === position) ? true : false,
               img: img
             }
-            return(
-              <Tile key={parseInt(position)} {...tileConfig}></Tile>
-            )
+
+            return <Tile key={parseInt(position)} {...tileConfig}></Tile>
           }))
         })}
       </StyledBoard>
     )
-  }
-}
-
-const stateToProps = state => {
-  return {
-    pieceSelected: state.pieceSelected,
-    validMoves: state.validMoves
-  }
-}
-
-const dispatchToProps = dispatch => {
-  return {
-    updatePieceSelected: pos => dispatch(actions.updatePieceSelected(pos)),
-    updateValidMoves: arr =>  dispatch(actions.updateValidMoves(arr))
   }
 }
 
@@ -148,4 +150,4 @@ const getPieceImageFromName = (name) => {
   }
 }
 
-export default connect(stateToProps, dispatchToProps)(Board)
+export default Board

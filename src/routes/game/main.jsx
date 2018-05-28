@@ -12,30 +12,25 @@ const StyledBoard = styled.div`
 class Game extends React.Component {
   constructor({match}) {
     super()
+
     this.gameID = match.params.gameID
-    console.log(this.gameID)
   }
 
   componentDidMount() {
-    this.database = firebase.database()
-    this.gameRef = this.database.ref()
   }
 
   componentWillUnmount() {
-    //remove listeners
   }
 
   render() {
     return (
-      <GameBoard />
+      <GameBoard gameID={this.gameID}/>
     )
   }
 }
 
 const stateToProps = state => {
-  return {
-    user: state.user
-  }
+  return {}
 }
 
 const dispatchToProps = dispatch => {

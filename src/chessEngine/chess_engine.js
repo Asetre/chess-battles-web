@@ -83,6 +83,15 @@ export class Board {
     this.placePiece(wB2, '75')
   }
 
+  boardToJSON() {
+    return JSON.stringify(this.board)
+  }
+
+  updateBoard(data) {
+    board = JSON.parse(data)
+    this.board = board
+  }
+
   reverseBoard() {
     this.board = this.board.map(row => row.reverse()).reverse()
     this.reversed = true

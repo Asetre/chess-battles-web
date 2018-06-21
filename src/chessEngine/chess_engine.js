@@ -88,7 +88,7 @@ export class Board {
   }
 
   updateBoard(data) {
-    board = JSON.parse(data)
+    let board = JSON.parse(data)
     this.board = board
   }
 

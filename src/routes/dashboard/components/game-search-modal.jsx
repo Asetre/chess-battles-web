@@ -54,6 +54,9 @@ class GameSearchModal extends React.Component {
       let {gameID, matchFound} = snap.val()
 
       if(matchFound) {
+        this.matchMakingRef.update({
+          matchFound: true
+        })
         this.props.history.push(`/game/${gameID}`)
       }
     })

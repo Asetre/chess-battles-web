@@ -44,17 +44,38 @@ class Board extends React.Component {
     }
   }
 
-  gameTileClick() {
+  gameTileClick(position) {
+    let previousLocation = null
+    let newLocation = null
+    if (this.state.selectedPiece) {
+      if (this.state.validMoves.find(pos => pos === position)) {
+        const piece = Chess.getPosition(this.state.selectedPiece)
+        console.log(piece)
+        Chess.movePiece(piece, position)
+        this.updatePieceSelected(null)
+        this.updateValidMoves([])
+      } else {
+        this.updatePieceSelected(null)
+        this.updateValidMoves([])
+      }
+    } else {
+      const piece = Chess.getPosition(position)
+      if (piece) {
+        const validMoves = piece.findValidMoves(Chess)
+        this.updatePieceSelected(piece.position)
+        this.updateValidMoves(validMoves)
+      }
+    }
   }
 
   demoTileClick(position) {
-    if(this.state.selectedPiece) {
-      if(this.state.validMoves.find(pos => pos === position)) {
+    if (this.state.selectedPiece) {
+      if (this.state.validMoves.find(pos => pos === position)) {
         const piece = Chess.getPosition(this.state.selectedPiece)
         Chess.movePiece(piece, position)
         this.updatePieceSelected(null)
         this.updateValidMoves([])
-      }else {
+      } else {
         this.updatePieceSelected(null)
         this.updateValidMoves([])
       }

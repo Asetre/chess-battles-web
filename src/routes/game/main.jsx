@@ -4,25 +4,25 @@ import {connect} from 'react-redux'
 import styled from 'styled-components'
 import firebase from 'firebase'
 
-//components
+// components
 import GameBoard from '../../gameComponents/game-board'
 
 const StyledBoard = styled.div`
 `
 class Game extends React.Component {
-  constructor({match}) {
+  constructor ({match}) {
     super()
 
     this.gameID = match.params.gameID
   }
 
-  componentDidMount() {
+  componentDidMount () {
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
   }
 
-  render() {
+  render () {
     return (
       <GameBoard gameID={this.gameID}/>
     )

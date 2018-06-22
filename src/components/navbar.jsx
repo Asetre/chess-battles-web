@@ -31,12 +31,11 @@ const lock = new Auth0Lock(
 )
 class Navbar extends React.Component {
 
-  constructor() {
+  constructor(props) {
     super()
     this.handleLogin = this.handleLogin.bind(this)
     this.handleSignup = this.handleSignup.bind(this)
     lock.on("authenticated", function (authResult) {
-      console.log(authResult)
       // Use the token in authResult to getUserInfo() and save it to localStorage
       lock.getUserInfo(authResult.accessToken, function (err, profile) {
         if (err) {
@@ -48,11 +47,14 @@ class Navbar extends React.Component {
           axios.get(`${serverUrl}/users/login/${profile.sub}/${profile.nickname}`)
             .then((res) => {
               if (res.status !== 200) throw 'Failed to get user profile'
+              const userProfile = res.data
 
               let expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
 
               localStorage.setItem('accessToken', authResult.accessToken);
               localStorage.setItem('expiresAt', expiresAt)
+
+              props.updateUserProfile(userProfile)
             })
             .catch((err) => {
               console.log(err)

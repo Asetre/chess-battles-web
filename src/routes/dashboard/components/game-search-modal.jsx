@@ -58,6 +58,7 @@ class GameSearchModal extends React.Component {
           matchFound: true
         })
         this.props.history.push(`/game/${gameID}`)
+        this.matchMakingRef.remove()
       }
     })
   }

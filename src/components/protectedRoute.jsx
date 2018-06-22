@@ -2,7 +2,8 @@ import React from 'react'
 import {Route, Redirect} from 'react-router-dom'
 
 const isAuthenticated = () => {
-  const expiresAt = JSON.parse(localStorage.getItem('expiresAt'));
+  //add error handling for json parse
+  const expiresAt = localStorage.getItem('expiresAt')
   const accessToken = localStorage.getItem('accessToken')
 
   const tokenNotExpired =  new Date().getTime() < expiresAt;

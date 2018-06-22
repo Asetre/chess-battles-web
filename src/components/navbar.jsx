@@ -35,37 +35,61 @@ class Navbar extends React.Component {
     super()
     this.handleLogin = this.handleLogin.bind(this)
     this.handleSignup = this.handleSignup.bind(this)
+    this.persistUserSession = this.persistUserSession.bind(this)
+    this.getUserInfo = this.getUserInfo.bind(this)
+
+    if(this.persistUserSession()) return
+
+    let self = this
+
     lock.on("authenticated", function (authResult) {
-      // Use the token in authResult to getUserInfo() and save it to localStorage
-      lock.getUserInfo(authResult.accessToken, function (err, profile) {
-        if (err) {
-          console.log(err)
-          return;
-        }
-
-        if (profile.sub) {
-          axios.get(`${serverUrl}/users/login/${profile.sub}/${profile.nickname}`)
-            .then((res) => {
-              if (res.status !== 200) throw 'Failed to get user profile'
-              const userProfile = res.data
-
-              let expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
-
-              localStorage.setItem('accessToken', authResult.accessToken);
-              localStorage.setItem('expiresAt', expiresAt)
-
-              props.updateUserProfile(userProfile)
-            })
-            .catch((err) => {
-              console.log(err)
-            })
-        }
-
-      });
+      self.getUserInfo(authResult.accessToken, authResult.expiresIn)
     });
   }
 
-  componentDidMount() {
+  persistUserSession() {
+    let accessToken = localStorage.getItem('accessToken')
+    let expiresAt = JSON.parse(localStorage.getItem('expiresAt'))
+
+    if(expiresAt > new Date().getTime()) {
+      this.getUserInfo(accessToken, expiresAt)
+      return true
+    }
+    return false
+  }
+
+  getUserInfo(accessToken, expiresIn) {
+    // Use the token in authResult to getUserInfo() and save it to localStorage
+    let self = this
+    lock.getUserInfo(accessToken, function (err, profile) {
+      if (err) {
+        console.log(err)
+        return;
+      }
+
+      if (profile.sub) {
+        axios.get(`${serverUrl}/users/login/${profile.sub}/${profile.nickname}`)
+          .then((res) => {
+            if (res.status !== 200) throw 'Failed to get user profile'
+            const userProfile = res.data
+
+            if(expiresIn) {
+            var expiresAt = JSON.stringify((expiresIn * 1000) + new Date().getTime());
+            }else {
+              var expiresAt = expiresIn
+            }
+
+            localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('expiresAt', expiresAt)
+
+            self.props.updateUserProfile(userProfile)
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      }
+
+    });
   }
 
   handleLogin() {

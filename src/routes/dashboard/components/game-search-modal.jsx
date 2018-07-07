@@ -51,6 +51,7 @@ class GameSearchModal extends React.Component {
   setupEventListeners() {
     this.matchMakingRef = gameRepository.database.ref(`/match-making-que/${this.state.matchMakingQueID}`)
     this.matchMakingRef.on('value', (snap) => {
+      try {
       let {gameID, matchFound} = snap.val()
 
       if(matchFound) {
@@ -59,6 +60,9 @@ class GameSearchModal extends React.Component {
         })
         this.props.history.push(`/game/${gameID}`)
         this.matchMakingRef.remove()
+      }
+      }catch(err) {
+        console.log(err)
       }
     })
   }

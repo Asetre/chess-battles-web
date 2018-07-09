@@ -45,15 +45,13 @@ class Board extends React.Component {
   }
 
   gameTileClick(position) {
-    let previousLocation = null
-    let newLocation = null
     if (this.state.selectedPiece) {
       if (this.state.validMoves.find(pos => pos === position)) {
         const piece = Chess.getPosition(this.state.selectedPiece)
-        console.log(piece)
         Chess.movePiece(piece, position)
         this.updatePieceSelected(null)
         this.updateValidMoves([])
+        this.props.handlePieceMove(Chess.boardToJSON())
       } else {
         this.updatePieceSelected(null)
         this.updateValidMoves([])

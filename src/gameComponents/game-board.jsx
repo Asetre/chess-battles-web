@@ -4,10 +4,31 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import Chess, * as Engine from '../chessEngine/chess_engine'
 import firebase from 'firebase'
+import Tile from './tile'
 
-import Board from './board'
+//Images
+import bK from '../assets/bK.png'
+import bR from '../assets/bR.png'
+import bQ from '../assets/bQ.png'
+import bKn from '../assets/bKn.png'
+import bB from '../assets/bB.png'
+import bP from '../assets/bP.png'
+import wK from '../assets/wK.png'
+import wQ from '../assets/wQ.png'
+import wR from '../assets/wR.png'
+import wKn from '../assets/wKn.png'
+import wB from '../assets/wB.png'
+import wP from '../assets/wP.png'
 
-const StyledGameBoard = styled.div`
+const StyledBoard = styled.div`
+width: 80%;
+border: 1px solid red;
+display: flex;
+flex-wrap: wrap;
+
+> div {
+  margin: 0;
+}
 `
 
 const database = firebase.database()
@@ -26,8 +47,9 @@ class GameBoard extends React.Component {
     super()
 
     this.state = {
+      selectedPiece: null,
+      validMoves: [],
       gameID: props.gameID,
-      boardState: Chess.board,
       turn: 1,
       currentPlayerTurn: 1,
       userColor: null,
@@ -35,23 +57,17 @@ class GameBoard extends React.Component {
       userColor: null,
       userClass: null,
       opponentClass: null,
-      opponentColor: null
+      opponentColor: null,
+      reversed: false
     }
 
     this.setupEventListeners = this.setupEventListeners.bind(this)
     this.handleBoardChange = this.handleBoardChange.bind(this)
     this.handlePieceMove = this.handlePieceMove.bind(this)
+    this.handleTileClick = this.handleTileClick.bind(this)
     this.initializeGame = this.initializeGame.bind(this)
     this.identifyUserColorsAndClass = this.identifyUserColorsAndClass.bind(this)
     this.gameRef = database.ref(`/games/${this.state.gameID}`)
-
-    this.config = {
-      reversed: false,
-      demo: false,
-      handleBoardChange: this.handleBoardChange,
-      handlePieceMove: this.handlePieceMove
-    }
-
 
     this.initializeGame()
 
@@ -68,12 +84,12 @@ class GameBoard extends React.Component {
       let p1Class = null
       let p2Class = null
 
-      let {userClass, opponentClass} = this.state
+      let { userClass, opponentClass } = this.state
 
-      if(this.state.userColor === 1) {
+      if (this.state.userColor === 1) {
         p1Class = userClass
         p2Class = opponentClass
-      }else {
+      } else {
         p1Class = opponentClass
         p2Class = userClass
       }
@@ -82,17 +98,60 @@ class GameBoard extends React.Component {
     })
   }
 
+  getPieceImageFromName(name) {
+    switch (name) {
+      case 'White King':
+        return wK
+
+      case 'White Queen':
+        return wQ
+
+      case 'White Rook':
+        return wR
+
+      case 'White Knight':
+        return wKn
+
+      case 'White Bishop':
+        return wB
+
+      case 'White Pawn':
+        return wP
+
+      case 'Black King':
+        return bK
+
+      case 'Black Queen':
+        return bQ
+
+      case 'Black Rook':
+        return bR
+
+      case 'Black Knight':
+        return bKn
+
+      case 'Black Bishop':
+        return bB
+
+      case 'Black Pawn':
+        return bP
+
+      default:
+        return null
+    }
+  }
+
   setupEventListeners() {
     this.gameRef.on('value', (snap) => {
       try {
         let { boardState, turn, totalMoves, users } = snap.val()
 
-        if(boardState) {
+        if (boardState) {
           Chess.updateBoard(boardState)
-          this.config.updateBoard = true
+          this.forceUpdate()
         }
 
-      }catch(err) {
+      } catch (err) {
         console.log(err)
       }
 
@@ -114,33 +173,87 @@ class GameBoard extends React.Component {
 
   identifyUserColorsAndClass(users) {
     users.forEach((user, index) => {
-      if(user) {
+      if (user) {
         let currentUser = user.user
-        if(currentUser.id == this.props.user._id) {
+        if (currentUser.id == this.props.user._id) {
           let stateToUpdate = {
             userColor: index,
             userClass: currentUser.selectedClass
           }
 
           this.setState(stateToUpdate)
-        }else {
+        } else {
           let stateToUpdate = {
             opponentColor: index,
             opponentClass: currentUser.selectedClass
           }
           this.setState(stateToUpdate)
         }
-      }else {
+      } else {
         //abort game
       }
     })
   }
 
+  updatePieceSelected(position) {
+    this.setState({
+      selectedPiece: position
+    })
+  }
+
+  updateValidMoves(validMoves) {
+    this.setState({
+      validMoves: validMoves
+    })
+  }
+
+  handleTileClick(position) {
+    if (this.state.selectedPiece) {
+      if (this.state.validMoves.find(pos => pos === position)) {
+        const piece = Chess.getPosition(this.state.selectedPiece)
+        Chess.movePiece(piece, position)
+        this.updatePieceSelected(null)
+        this.updateValidMoves([])
+        this.handlePieceMove(Chess.boardToJSON())
+      } else {
+        this.updatePieceSelected(null)
+        this.updateValidMoves([])
+      }
+    } else {
+      const piece = Chess.getPosition(position)
+      if (piece) {
+        const validMoves = piece.findValidMoves(Chess)
+        this.updatePieceSelected(piece.position)
+        this.updateValidMoves(validMoves)
+      }
+    }
+  }
+
+
+
   render() {
+    let state = this.state
     return (
-      <StyledGameBoard>
-        <Board {...this.config} />
-      </StyledGameBoard>
+      <StyledBoard>
+        {Chess.board.map((row, r) => {
+          return (row.map((col, c) => {
+            const position = state.reversed ? Engine.Board.convertPosition(`${r}${c}`, { reversed: state.reversed, toString: true }) : `${r}${c}`
+            const tile = Chess.getPosition(position)
+            const name = tile ? tile.name : null
+            const img = this.getPieceImageFromName(name)
+
+            const tileConfig = {
+              handleTileClick: this.handleTileClick,
+              position: position,
+              tile: tile,
+              highlight: this.state.validMoves.find(pos => pos === position) ? true : false,
+              img: img
+            }
+
+            return <Tile key={parseInt(position)} {...tileConfig}></Tile>
+          }))
+        })}
+      </StyledBoard>
     )
   }
 }

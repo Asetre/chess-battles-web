@@ -48,17 +48,17 @@ class Board extends React.Component {
     if (this.state.selectedPiece) {
       if (this.state.validMoves.find(pos => pos === position)) {
         const piece = Chess.getPosition(this.state.selectedPiece)
+        this.props.handlePieceMove(this.state.selectedPiece, position)
         Chess.movePiece(piece, position)
         this.updatePieceSelected(null)
         this.updateValidMoves([])
-        this.props.handlePieceMove(Chess.boardToJSON())
       } else {
         this.updatePieceSelected(null)
         this.updateValidMoves([])
       }
     } else {
       const piece = Chess.getPosition(position)
-      if (piece) {
+      if (piece && piece.team === this.props.userTeam && this.props.turn === piece.team) {
         const validMoves = piece.findValidMoves(Chess)
         this.updatePieceSelected(piece.position)
         this.updateValidMoves(validMoves)
@@ -101,6 +101,11 @@ class Board extends React.Component {
 
   render() {
     let props = this.props
+
+    if(props.gameBoard) {
+      Chess.updateBoard(props.gameBoard)
+    }
+
     return (
       <StyledBoard>
         {Chess.board.map((row, r) => {
@@ -126,47 +131,48 @@ class Board extends React.Component {
   }
 }
 
-const getPieceImageFromName = (name) => {
+function getPieceImageFromName(name) {
   switch (name) {
     case 'White King':
-    return wK
+      return wK
 
     case 'White Queen':
-    return wQ
+      return wQ
 
     case 'White Rook':
-    return wR
+      return wR
 
     case 'White Knight':
-    return wKn
+      return wKn
 
     case 'White Bishop':
-    return wB
+      return wB
 
     case 'White Pawn':
-    return wP
+      return wP
 
     case 'Black King':
-    return bK
+      return bK
 
     case 'Black Queen':
-    return bQ
+      return bQ
 
     case 'Black Rook':
-    return bR
+      return bR
 
     case 'Black Knight':
-    return bKn
+      return bKn
 
     case 'Black Bishop':
-    return bB
+      return bB
 
     case 'Black Pawn':
-    return bP
+      return bP
 
     default:
-    return null
+      return null
   }
 }
+
 
 export default Board

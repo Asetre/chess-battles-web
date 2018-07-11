@@ -4,51 +4,19 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import Chess, * as Engine from '../chessEngine/chess_engine'
 import firebase from 'firebase'
-import Tile from './tile'
 
-//Images
-import bK from '../assets/bK.png'
-import bR from '../assets/bR.png'
-import bQ from '../assets/bQ.png'
-import bKn from '../assets/bKn.png'
-import bB from '../assets/bB.png'
-import bP from '../assets/bP.png'
-import wK from '../assets/wK.png'
-import wQ from '../assets/wQ.png'
-import wR from '../assets/wR.png'
-import wKn from '../assets/wKn.png'
-import wB from '../assets/wB.png'
-import wP from '../assets/wP.png'
-
-const StyledBoard = styled.div`
-width: 80%;
-border: 1px solid red;
-display: flex;
-flex-wrap: wrap;
-
-> div {
-  margin: 0;
-}
-`
+import Board from './board'
 
 const database = firebase.database()
 
 //goals
 //---------------
-//identify the user color
-//identify both users selected piece
-//update firebase upon piece move
-//prevent user from moving opponents pieces
-//prevent user from moving when not their turn
-//update the game board on opponent move
 
 class GameBoard extends React.Component {
   constructor(props) {
     super()
 
     this.state = {
-      selectedPiece: null,
-      validMoves: [],
       gameID: props.gameID,
       turn: 1,
       currentPlayerTurn: 1,
@@ -58,16 +26,23 @@ class GameBoard extends React.Component {
       userClass: null,
       opponentClass: null,
       opponentColor: null,
-      reversed: false
+      reversed: false,
+      updateCount: 0
     }
 
     this.setupEventListeners = this.setupEventListeners.bind(this)
-    this.handleBoardChange = this.handleBoardChange.bind(this)
-    this.handlePieceMove = this.handlePieceMove.bind(this)
-    this.handleTileClick = this.handleTileClick.bind(this)
     this.initializeGame = this.initializeGame.bind(this)
     this.identifyUserColorsAndClass = this.identifyUserColorsAndClass.bind(this)
+    this.handlePieceMove = this.handlePieceMove.bind(this)
     this.gameRef = database.ref(`/games/${this.state.gameID}`)
+
+    this.config = {
+      demo: false,
+      handlePieceMove: this.handlePieceMove,
+      gameInitialized: false,
+      userTeam: null,
+      updateCount: 0
+    }
 
     this.initializeGame()
 
@@ -79,6 +54,7 @@ class GameBoard extends React.Component {
       let { users } = snap.val()
 
       this.identifyUserColorsAndClass(users)
+      this.config.reversed = this.state.userColor === 1 ? false : true
 
       Chess.resetBoard()
       let p1Class = null
@@ -95,76 +71,51 @@ class GameBoard extends React.Component {
       }
 
       Chess.setUpGame(p1Class, p2Class)
+      this.config.gameInitialized = true
     })
-  }
-
-  getPieceImageFromName(name) {
-    switch (name) {
-      case 'White King':
-        return wK
-
-      case 'White Queen':
-        return wQ
-
-      case 'White Rook':
-        return wR
-
-      case 'White Knight':
-        return wKn
-
-      case 'White Bishop':
-        return wB
-
-      case 'White Pawn':
-        return wP
-
-      case 'Black King':
-        return bK
-
-      case 'Black Queen':
-        return bQ
-
-      case 'Black Rook':
-        return bR
-
-      case 'Black Knight':
-        return bKn
-
-      case 'Black Bishop':
-        return bB
-
-      case 'Black Pawn':
-        return bP
-
-      default:
-        return null
-    }
   }
 
   setupEventListeners() {
     this.gameRef.on('value', (snap) => {
       try {
-        let { boardState, turn, totalMoves, users } = snap.val()
+        let {turn, totalMoves, users, pieceMove, boardState} = snap.val()
 
-        if (boardState) {
+        this.setState({
+          currentPlayerTurn: turn
+        })
+
+        if(boardState && turn == this.state.userColor) {
           Chess.updateBoard(boardState)
-          this.forceUpdate()
+          let newUpdateCount = this.state.updateCount++
+          this.setState({newUpdateCount})
+          console.log(this.state)
+          return
+        }
+
+        if(pieceMove && pieceMove.playerColor !== this.state.userColor) {
+          let piece = Chess.getPosition(pieceMove.oldPosition)
+          Chess.movePiece(piece, pieceMove.newPosition)
         }
 
       } catch (err) {
         console.log(err)
       }
-
-      //Chess.updateBoard(boardState)
     })
   }
 
-  handleBoardChange(jsonBoard) {
-    //this.gameRef.child('boardState').set(jsonBoard)
-  }
+  handlePieceMove(oldPosition, newPosition) {
+    let pieceMove = {
+      oldPosition,
+      newPosition,
+      playerColor: this.state.userColor,
+    }
 
-  handlePieceMove(jsonBoard) {
+    let jsonBoard = Chess.boardToJSON()
+
     this.gameRef.child('boardState').set(jsonBoard)
+    this.gameRef.child('pieceMove').set(pieceMove)
+    let playerTurn = this.state.userColor === 1 ? 0 : 1
+    this.gameRef.child('turn').set(playerTurn)
   }
 
   removeEventListeners() {
@@ -189,71 +140,18 @@ class GameBoard extends React.Component {
           }
           this.setState(stateToUpdate)
         }
+
       } else {
         //abort game
       }
     })
   }
 
-  updatePieceSelected(position) {
-    this.setState({
-      selectedPiece: position
-    })
-  }
-
-  updateValidMoves(validMoves) {
-    this.setState({
-      validMoves: validMoves
-    })
-  }
-
-  handleTileClick(position) {
-    if (this.state.selectedPiece) {
-      if (this.state.validMoves.find(pos => pos === position)) {
-        const piece = Chess.getPosition(this.state.selectedPiece)
-        Chess.movePiece(piece, position)
-        this.updatePieceSelected(null)
-        this.updateValidMoves([])
-        this.handlePieceMove(Chess.boardToJSON())
-      } else {
-        this.updatePieceSelected(null)
-        this.updateValidMoves([])
-      }
-    } else {
-      const piece = Chess.getPosition(position)
-      if (piece) {
-        const validMoves = piece.findValidMoves(Chess)
-        this.updatePieceSelected(piece.position)
-        this.updateValidMoves(validMoves)
-      }
-    }
-  }
-
-
-
   render() {
     let state = this.state
+    this.config.userTeam = this.state.userColor
     return (
-      <StyledBoard>
-        {Chess.board.map((row, r) => {
-          return (row.map((col, c) => {
-            const position = state.reversed ? Engine.Board.convertPosition(`${r}${c}`, { reversed: state.reversed, toString: true }) : `${r}${c}`
-            const tile = Chess.getPosition(position)
-            const name = tile ? tile.name : null
-            const img = this.getPieceImageFromName(name)
-
-            const tileConfig = {
-              handleTileClick: this.handleTileClick,
-              position: position,
-              tile: tile,
-              highlight: this.state.validMoves.find(pos => pos === position) ? true : false,
-              img: img
-            }
-
-            return <Tile key={parseInt(position)} {...tileConfig}></Tile>
-          }))
-        })}
-      </StyledBoard>
+      <Board {...this.config} turn={this.state.currentPlayerTurn} updateCount={this.state.updateCount}/>
     )
   }
 }

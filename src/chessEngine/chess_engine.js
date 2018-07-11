@@ -89,7 +89,45 @@ export class Board {
 
   updateBoard(data) {
     let board = JSON.parse(data)
-    this.board = board
+
+    this.resetBoard()
+
+    board.forEach((row) => {
+      row.forEach((tile) => {
+        if(tile) {
+          let piece = this.generatePiece(tile.name, tile.type, tile.team)
+          this.placePiece(piece, tile.position)
+        }
+      })
+    })
+  }
+
+  generatePiece(name, playerClass, team) {
+
+    name = name.split(' ')[1]
+
+    switch(name) {
+      case 'King':
+      return new King(team, playerClass)
+
+      case 'Queen':
+      return new Queen(team, playerClass)
+
+      case 'Rook':
+      return new Rook(team, playerClass)
+
+      case 'Knight':
+      return new Knight(team, playerClass)
+
+      case 'Bishop':
+      return new Bishop(team, playerClass)
+
+      case 'Pawn':
+      return new Pawn(team, playerClass)
+
+      default:
+      return null
+    }
   }
 
   reverseBoard() {

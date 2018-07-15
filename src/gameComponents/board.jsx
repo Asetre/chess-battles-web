@@ -44,12 +44,15 @@ class Board extends React.Component {
     }
   }
 
-  gameTileClick(position) {
-    if (this.state.selectedPiece) {
-      if (this.state.validMoves.find(pos => pos === position)) {
+  gameTileClick(newPosition) {
+    let selectedPiece = this.state.selectedPiece
+    if (selectedPiece) {
+      if (this.state.validMoves.find(pos => pos === newPosition)) {
+        let oldPosition = selectedPiece.position
         const piece = Chess.getPosition(this.state.selectedPiece)
-        this.props.handlePieceMove(this.state.selectedPiece, position)
-        Chess.movePiece(piece, position)
+
+        this.props.handlePieceMove(this.state.selectedPiece, newPosition)
+        Chess.movePiece(piece, newPosition)
         this.updatePieceSelected(null)
         this.updateValidMoves([])
       } else {
@@ -57,7 +60,7 @@ class Board extends React.Component {
         this.updateValidMoves([])
       }
     } else {
-      const piece = Chess.getPosition(position)
+      const piece = Chess.getPosition(newPosition)
       if (piece && piece.team === this.props.userTeam && this.props.turn === piece.team) {
         const validMoves = piece.findValidMoves(Chess)
         this.updatePieceSelected(piece.position)

@@ -149,7 +149,6 @@ export class Board {
     this.initializeBoard()
   }
 
-  //Gets a tile/location from the board based on a zero based index row and column integer
   getPosition(position) {
     if(!Array.isArray(position)) position = Board.convertPosition(position)
     const row = position[0]
@@ -206,6 +205,13 @@ export class Board {
         this.placePiece(piece, position)
       }
     }
+  }
+
+  movePositions(oldPosition, newPosition) {
+    if(!oldPosition && !newPosition || typeof oldPosition !== 'string' || typeof newPosition !== 'string' ) throw new BoardError('Invalid Arguments')
+    let piece = this.getPosition(oldPosition)
+    if(!piece) throw new BoardError('Piece does not exist at old location')
+    this.movePiece(piece, newPosition)
   }
 
   isTileEmpty(position) {

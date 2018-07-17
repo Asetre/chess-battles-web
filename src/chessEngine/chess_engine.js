@@ -87,7 +87,7 @@ export class Board {
     return JSON.stringify(this.board)
   }
 
-  updateBoard(data) {
+  jsonToBoard(data) {
     let board = JSON.parse(data)
 
     this.resetBoard()
@@ -95,14 +95,14 @@ export class Board {
     board.forEach((row) => {
       row.forEach((tile) => {
         if(tile) {
-          let piece = this.generatePiece(tile.name, tile.type, tile.team)
+          let piece = this.generatePiece(tile.name, tile.type, tile.team, tile.firstMove)
           this.placePiece(piece, tile.position)
         }
       })
     })
   }
 
-  generatePiece(name, playerClass, team) {
+  generatePiece(name, playerClass, team, firstMove) {
 
     name = name.split(' ')[1]
 
@@ -123,7 +123,7 @@ export class Board {
       return new Bishop(team, playerClass)
 
       case 'Pawn':
-      return new Pawn(team, playerClass)
+      return new Pawn(team, playerClass, firstMove)
 
       default:
       return null
@@ -173,13 +173,39 @@ export class Board {
     this.board[row][column] = piece
   }
 
+  kingsInCheck() {
+    let kingsPositions = this.getKingsPositions()
+    let allPieceMoves = this.getEveryPieceMove()
+
+    if(!kingsPositions) return []
+
+    return kingsPositions.reduce((acc, curr) => {
+      if(allPieceMoves.find((pos) => pos === curr)) acc.push(curr)
+      return acc
+    },[])
+  }
+
+  getEveryPieceMove() {
+    let allValidMoves = []
+    this.board.forEach((row) => {
+      row.forEach((tile) => {
+        if(tile) {
+          let validMoves = tile.findValidMoves(this)
+          allValidMoves = allValidMoves.concat(validMoves)
+        }
+      })
+    })
+    return allValidMoves
+  }
+
   getKingsPositions() {
     const kings = this.board.reduce((acc, curr) => {
-      if(curr) {
-        if(curr.king) acc.push(curr.position)
-      }
+        curr.forEach((tile) => {
+          if(tile && tile.king) acc.push(tile.position)
+        })
       return acc
     }, [])
+
     return kings.length > 0 ? kings : false
   }
 
@@ -557,9 +583,12 @@ export class Queen extends Piece {
 }
 
 export class Pawn extends Piece {
-  constructor(team, type) {
+  constructor(team, type, firstMove) {
     super(team, type)
     this.firstMove = true
+    if(firstMove) {
+      this.firstMove = firstMove
+    }
     this.doubleMove = false
     this.team === 1 ? this.name = 'White Pawn' : this.name = 'Black Pawn'
   }
@@ -603,6 +632,7 @@ export class Pawn extends Piece {
           this.possibleMoves.push([[row - 2, column]])
         }
       }else {
+        console.log(board)
         if(board.isTileEmpty([row + 1, column])) {
           this.possibleMoves.push([[row + 2, column]])
         }

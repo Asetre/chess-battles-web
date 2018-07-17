@@ -39,11 +39,12 @@ class GameBoard extends React.Component {
     this.handlePieceMove = this.handlePieceMove.bind(this)
     this.updateSocketID = this.updateSocketID.bind(this)
     this.identifyOpponentSocketID = this.identifyOpponentSocketID.bind(this)
+    this.handleGameOver = this.handleGameOver.bind(this)
 
     this.config = {
       demo: false,
       handlePieceMove: this.handlePieceMove,
-      userTeam: null
+      handleGameOver: this.handleGameOver
     }
 
     this.initializeGame()
@@ -65,6 +66,7 @@ class GameBoard extends React.Component {
       let data = snap.val()
       let users = data.users
       let boardState = data.boardState
+      let turn = data.turn
       let userClass = state.userClass
       let opponentClass = state.opponentClass
 
@@ -82,9 +84,10 @@ class GameBoard extends React.Component {
         p2Class = userClass
       }
 
-
       if (boardState) {
-        //load the previous board state
+        Chess.jsonToBoard(boardState)
+        this.setState({currentPlayerTurn: turn})
+        console.log(this.state)
       } else {
         Chess.setUpGame(p1Class, p2Class)
       }
@@ -97,10 +100,9 @@ class GameBoard extends React.Component {
 
   identifyOpponentSocketID(snap) {
     console.log('firebase event listener')
-    let users = snap.val().users
+    let users = snap.val()
 
     if(this.state.opponentSocketID) {
-      this.gameRef.off()
       return
     }
 
@@ -120,19 +122,20 @@ class GameBoard extends React.Component {
 
   setupEventListeners() {
     this.socket = io('http://localhost:8080')
+    this.opponentSocketIDRef = database.ref(`/games/${this.state.gameID}/users`)
     this.socket.on('connect', () => {
       this.socket.emit('join room', this.state.gameID)
     })
 
     this.socket.on('opponent piece move', (pieceMove) => {
       Chess.movePositions(pieceMove.oldPosition, pieceMove.newPosition)
-      let updatedTurn = this.turn === 1 ? 0 : 1;
+      let updatedTurn = pieceMove.playerColor === 1 ? 0 : 1;
       this.setState({
-        updatedTurn: updatedTurn
+        currentPlayerTurn: updatedTurn
       })
     })
     
-    this.gameRef.on('value', this.identifyOpponentSocketID)
+    this.opponentSocketIDRef.on('value', this.identifyOpponentSocketID)
   }
 
   handlePieceMove(oldPosition, newPosition) {
@@ -146,13 +149,21 @@ class GameBoard extends React.Component {
     let jsonBoard = Chess.boardToJSON()
 
     this.socket.emit('piece move', pieceMove)
+    let updatedTurn = pieceMove.playerColor === 1 ? 0 : 1;
+    this.gameRef.child('turn').set(updatedTurn)
+    this.gameRef.child('boardState').set(jsonBoard)
+    this.setState({currentPlayerTurn: updatedTurn})
+  }
 
-    let playerTurn = this.state.userColor === 1 ? 0 : 1
-    this.gameRef.child('turn').set(playerTurn)
+  handleGameOver(winner) {
+    console.log('game over')
+    console.log(winner)
+
   }
 
   removeEventListeners() {
     this.gameRef.off()
+    this.opponentSocketIDRef.off()
     this.socket.off()
   }
 
@@ -186,7 +197,7 @@ class GameBoard extends React.Component {
     this.config.userTeam = this.state.userColor
 
     return (
-      <Board {...this.config} gameInitialized={state.gameInitialized} turn={state.currentPlayerTurn} />
+      <Board {...this.config} gameInitialized={state.gameInitialized} turn={state.currentPlayerTurn} userTeam={this.state.userColor}/>
     )
   }
 }

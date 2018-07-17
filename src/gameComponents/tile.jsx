@@ -13,6 +13,7 @@ display: flex;
 align-items: center;
 justify-content: center;
 background-color: ${props => {
+  if(props.inCheck) return 'green'
   if(props.highlight) return 'red'
   const position = props.position.split('').map(str => parseInt(str, 10))
   const row = position[0], column = position[1]

@@ -40,8 +40,15 @@ class Board extends React.Component {
 
     this.state = {
       selectedPiece: null,
-      validMoves: []
+      validMoves: [],
+      kingsInCheck: []
     }
+  }
+
+  componentDidMount() {
+    this.setState({
+      kingsInCheck: Chess.kingsInCheck()
+    })
   }
 
   gameTileClick(newPosition) {
@@ -51,10 +58,21 @@ class Board extends React.Component {
         let oldPosition = selectedPiece.position
         const piece = Chess.getPosition(this.state.selectedPiece)
 
-        this.props.handlePieceMove(this.state.selectedPiece, newPosition)
         Chess.movePiece(piece, newPosition)
+        this.props.handlePieceMove(this.state.selectedPiece, newPosition)
         this.updatePieceSelected(null)
         this.updateValidMoves([])
+        let kingsInCheck =Chess.kingsInCheck() 
+        if(kingsInCheck.length !== 0) {
+          this.setState({kingsInCheck: kingsInCheck})
+        }else {
+          this.setState({kingsInCheck: []})
+        }
+        if(Chess.getKingsPositions() && Chess.getKingsPositions().length < 2) {
+          let winner = Chess.getPosition(Chess.getKingsPositions()[0]).team
+          this.props.handleGameOver(winner)
+        }
+
       } else {
         this.updatePieceSelected(null)
         this.updateValidMoves([])
@@ -123,7 +141,8 @@ class Board extends React.Component {
               position: position,
               tile: tile,
               highlight: this.state.validMoves.find(pos => pos === position) ? true : false,
-              img: img
+              img: img,
+              inCheck: this.state.kingsInCheck.find((pos) => pos === position)
             }
 
             return <Tile key={parseInt(position)} {...tileConfig}></Tile>

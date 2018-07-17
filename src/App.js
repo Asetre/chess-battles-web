@@ -20,12 +20,12 @@ injectGlobal`
 }
 `
 class App extends Component {
-  render() {
-    return (
-      <Provider store={store}>
-        <AppRouter />
-      </Provider>
-    );
-  }
+    render() {
+        return (
+            <Provider store={store}>
+                <AppRouter />
+            </Provider>
+        )
+    }
 }
-export default App;
+export default App

@@ -87,7 +87,6 @@ class GameBoard extends React.Component {
       if (boardState) {
         Chess.jsonToBoard(boardState)
         this.setState({currentPlayerTurn: turn})
-        console.log(this.state)
       } else {
         Chess.setUpGame(p1Class, p2Class)
       }
@@ -99,7 +98,6 @@ class GameBoard extends React.Component {
   }
 
   identifyOpponentSocketID(snap) {
-    console.log('firebase event listener')
     let users = snap.val()
 
     if(this.state.opponentSocketID) {

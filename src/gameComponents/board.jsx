@@ -62,14 +62,17 @@ class Board extends React.Component {
         this.props.handlePieceMove(this.state.selectedPiece, newPosition)
         this.updatePieceSelected(null)
         this.updateValidMoves([])
-        let kingsInCheck =Chess.kingsInCheck() 
+        let kingsPositions = Chess.getKingsPositions()
+        let kingsInCheck =Chess.kingsInCheck(kingsPositions) 
+
         if(kingsInCheck.length !== 0) {
           this.setState({kingsInCheck: kingsInCheck})
         }else {
           this.setState({kingsInCheck: []})
         }
-        if(Chess.getKingsPositions() && Chess.getKingsPositions().length < 2) {
-          let winner = Chess.getPosition(Chess.getKingsPositions()[0]).team
+
+        if(kingsPositions && kingsPositions.length < 2 && kingsPositions.length >0) {
+          let winner = kingsPositions[0].team
           this.props.handleGameOver(winner)
         }
 

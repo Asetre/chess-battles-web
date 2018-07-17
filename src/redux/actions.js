@@ -4,29 +4,29 @@ export const update_valid_moves = 'update valid moves'
 export const update_user_profile = 'update user profile'
 
 export function updateGame(game) {
-  return {
-    type: init_board,
-    payload: game
-  }
+    return {
+        type: init_board,
+        payload: game
+    }
 }
 
 export function updatePieceSelected(pos) {
-  return {
-    type: update_selected_piece,
-    payload: pos
-  }
+    return {
+        type: update_selected_piece,
+        payload: pos
+    }
 }
 
 export function updateValidMoves(arr) {
-  return {
-    type: update_valid_moves,
-    payload: arr
-  }
+    return {
+        type: update_valid_moves,
+        payload: arr
+    }
 }
 
 export function updateUserProfile(user) {
-  return {
-    type: update_user_profile,
-    payload: user
-  }
+    return {
+        type: update_user_profile,
+        payload: user
+    }
 }

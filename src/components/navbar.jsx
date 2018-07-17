@@ -1,8 +1,18 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import styled from 'styled-components'
-import Auth from '../auth0.js'
 import Btn from './button'
+import Auth0Lock from 'auth0-lock'
+import axios from 'axios'
+import { serverUrl } from '../config'
+import * as actions from '../redux/actions'
+
+const lockOptions = {
+  autoclose: true,
+  auth: {
+    redirect: false
+  }
+}
 
 const StyledNavbar = styled.div`
 display: flex;
@@ -14,24 +24,84 @@ color: red;
 font-size: 200%;
 `
 
+const lock = new Auth0Lock(
+  'M1pfmr2L43kkkgA4wo7R1y26EsPhahAd',
+  'paul-asetre.auth0.com',
+  lockOptions
+)
 class Navbar extends React.Component {
-  constructor() {
+
+  constructor(props) {
     super()
     this.handleLogin = this.handleLogin.bind(this)
     this.handleSignup = this.handleSignup.bind(this)
-    this.auth = new Auth()
+    this.persistUserSession = this.persistUserSession.bind(this)
+    this.getUserInfo = this.getUserInfo.bind(this)
+
+    if(this.persistUserSession()) return
+
+    let self = this
+
+    lock.on("authenticated", function (authResult) {
+      self.getUserInfo(authResult.accessToken, authResult.expiresIn)
+    });
+  }
+
+  persistUserSession() {
+    let accessToken = localStorage.getItem('accessToken')
+    let expiresAt = JSON.parse(localStorage.getItem('expiresAt'))
+
+    if(expiresAt > new Date().getTime()) {
+      this.getUserInfo(accessToken, expiresAt)
+      return true
+    }
+    return false
+  }
+
+  getUserInfo(accessToken, expiresIn) {
+    // Use the token in authResult to getUserInfo() and save it to localStorage
+    let self = this
+    lock.getUserInfo(accessToken, function (err, profile) {
+      if (err) {
+        console.log(err)
+        return;
+      }
+
+      if (profile.sub) {
+        axios.get(`${serverUrl}/users/login/${profile.sub}/${profile.nickname}`)
+          .then((res) => {
+            if (res.status !== 200) throw 'Failed to get user profile'
+            const userProfile = res.data
+
+            if(expiresIn) {
+            var expiresAt = JSON.stringify((expiresIn * 1000) + new Date().getTime());
+            }else {
+              var expiresAt = expiresIn
+            }
+
+            localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('expiresAt', expiresAt)
+
+            self.props.updateUserProfile(userProfile)
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      }
+
+    });
   }
 
   handleLogin() {
-    this.auth.login()
+    lock.show()
   }
 
   handleSignup() {
-    this.auth.login()
+    lock.show()
   }
 
   render() {
-    return(
+    return (
       <StyledNavbar>
         <Logo>
           Chess Battles
@@ -49,8 +119,12 @@ const stateToProps = state => {
   }
 }
 
-const dispatchToProps = dispatch => {
-  return {}
+const dispatchToProps = (dispatch) => {
+  return {
+    updateUserProfile: (data) => {
+      dispatch(actions.updateUserProfile(data))
+    }
+  }
 }
 
 export default connect(stateToProps, dispatchToProps)(Navbar)

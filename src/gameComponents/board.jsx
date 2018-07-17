@@ -1,8 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import Chess, * as Engine from '../chessEngine/chess_engine'
-import {connect} from 'react-redux'
-import * as actions from '../redux/actions'
+
 //Images
 import bK from '../assets/bK.png'
 import bR from '../assets/bR.png'
@@ -35,36 +34,102 @@ class Board extends React.Component {
     super()
     this.gameTileClick = this.gameTileClick.bind(this)
     this.demoTileClick = this.demoTileClick.bind(this)
-
+    this.updatePieceSelected = this.updatePieceSelected.bind(this)
+    this.updateValidMoves = this.updateValidMoves.bind(this)
     this.handleTileClick = props.demo ? this.demoTileClick : this.gameTileClick
+
+    this.state = {
+      selectedPiece: null,
+      validMoves: [],
+      kingsInCheck: []
+    }
   }
 
-  gameTileClick() {
+  componentDidMount() {
+    this.setState({
+      kingsInCheck: Chess.kingsInCheck()
+    })
+  }
+
+  gameTileClick(newPosition) {
+    let selectedPiece = this.state.selectedPiece
+    if (selectedPiece) {
+      if (this.state.validMoves.find(pos => pos === newPosition)) {
+        let oldPosition = selectedPiece.position
+        const piece = Chess.getPosition(this.state.selectedPiece)
+
+        Chess.movePiece(piece, newPosition)
+        this.props.handlePieceMove(this.state.selectedPiece, newPosition)
+        this.updatePieceSelected(null)
+        this.updateValidMoves([])
+        let kingsPositions = Chess.getKingsPositions()
+        let kingsInCheck =Chess.kingsInCheck(kingsPositions) 
+
+        if(kingsInCheck.length !== 0) {
+          this.setState({kingsInCheck: kingsInCheck})
+        }else {
+          this.setState({kingsInCheck: []})
+        }
+
+        if(kingsPositions && kingsPositions.length < 2 && kingsPositions.length >0) {
+          let winner = kingsPositions[0].team
+          this.props.handleGameOver(winner)
+        }
+
+      } else {
+        this.updatePieceSelected(null)
+        this.updateValidMoves([])
+      }
+    } else {
+      const piece = Chess.getPosition(newPosition)
+      if (piece && piece.team === this.props.userTeam && this.props.turn === piece.team) {
+        const validMoves = piece.findValidMoves(Chess)
+        this.updatePieceSelected(piece.position)
+        this.updateValidMoves(validMoves)
+      }
+    }
   }
 
   demoTileClick(position) {
-    if(this.props.pieceSelected) {
-      if(this.props.validMoves.find(pos => pos === position)) {
-        const piece = Chess.getPosition(this.props.pieceSelected)
+    if (this.state.selectedPiece) {
+      if (this.state.validMoves.find(pos => pos === position)) {
+        const piece = Chess.getPosition(this.state.selectedPiece)
         Chess.movePiece(piece, position)
-        this.props.updatePieceSelected(null)
-        this.props.updateValidMoves([])
-      }else {
-        this.props.updatePieceSelected(null)
-        this.props.updateValidMoves([])
+        this.updatePieceSelected(null)
+        this.updateValidMoves([])
+      } else {
+        this.updatePieceSelected(null)
+        this.updateValidMoves([])
       }
     }else {
       const piece = Chess.getPosition(position)
       if(piece) {
         const validMoves = piece.findValidMoves(Chess)
-        this.props.updatePieceSelected(piece.position)
-        this.props.updateValidMoves(validMoves)
+        this.updatePieceSelected(piece.position)
+        this.updateValidMoves(validMoves)
       }
     }
   }
 
+  updatePieceSelected(position) {
+    this.setState({
+      selectedPiece: position
+    })
+  }
+
+  updateValidMoves(validMoves) {
+    this.setState({
+      validMoves: validMoves
+    })
+  }
+
   render() {
     let props = this.props
+
+    if(props.gameBoard) {
+      Chess.updateBoard(props.gameBoard)
+    }
+
     return (
       <StyledBoard>
         {Chess.board.map((row, r) => {
@@ -78,12 +143,12 @@ class Board extends React.Component {
               handleTileClick: this.handleTileClick,
               position: position,
               tile: tile,
-              highlight: this.props.validMoves.find(pos => pos === position) ? true : false,
-              img: img
+              highlight: this.state.validMoves.find(pos => pos === position) ? true : false,
+              img: img,
+              inCheck: this.state.kingsInCheck.find((pos) => pos === position)
             }
-            return(
-              <Tile key={parseInt(position)} {...tileConfig}></Tile>
-            )
+
+            return <Tile key={parseInt(position)} {...tileConfig}></Tile>
           }))
         })}
       </StyledBoard>
@@ -91,61 +156,48 @@ class Board extends React.Component {
   }
 }
 
-const stateToProps = state => {
-  return {
-    pieceSelected: state.pieceSelected,
-    validMoves: state.validMoves
-  }
-}
-
-const dispatchToProps = dispatch => {
-  return {
-    updatePieceSelected: pos => dispatch(actions.updatePieceSelected(pos)),
-    updateValidMoves: arr =>  dispatch(actions.updateValidMoves(arr))
-  }
-}
-
-const getPieceImageFromName = (name) => {
+function getPieceImageFromName(name) {
   switch (name) {
     case 'White King':
-    return wK
+      return wK
 
     case 'White Queen':
-    return wQ
+      return wQ
 
     case 'White Rook':
-    return wR
+      return wR
 
     case 'White Knight':
-    return wKn
+      return wKn
 
     case 'White Bishop':
-    return wB
+      return wB
 
     case 'White Pawn':
-    return wP
+      return wP
 
     case 'Black King':
-    return bK
+      return bK
 
     case 'Black Queen':
-    return bQ
+      return bQ
 
     case 'Black Rook':
-    return bR
+      return bR
 
     case 'Black Knight':
-    return bKn
+      return bKn
 
     case 'Black Bishop':
-    return bB
+      return bB
 
     case 'Black Pawn':
-    return bP
+      return bP
 
     default:
-    return null
+      return null
   }
 }
 
-export default connect(stateToProps, dispatchToProps)(Board)
+
+export default Board

@@ -1,36 +1,39 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {Redirect} from 'react-router-dom'
+import {Redirect, withRouter} from 'react-router-dom'
 import styled from 'styled-components'
 import Btn from '../../../components/button'
 import {serverUrl} from '../../../config'
-import axios from 'axios'
+import * as actions from '../../../redux/actions'
+import * as gameRepository from '../../../repository/game'
 
 const StyledGameSearchModal = styled.div`
 `
 
 class GameSearchModal extends React.Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
       selectedClass: 'Assasin',
-      matchMakingQueId: null
+      matchMakingQueID: null
     }
+
+    this.matchMakingRef = null
 
     this.findGame = this.findGame.bind(this)
     this.handleSelectChange = this.handleSelectChange.bind(this)
     this.cancelMatchMaking = this.cancelMatchMaking.bind(this)
+    this.setupEventListeners = this.setupEventListeners.bind(this)
   }
 
   handleSelectChange(e) {
     this.setState({selectedClass: e.target.value})
   }
 
-  findGame() {
-    let props = this.props
-    const {user} = props
+  async findGame() {
+    let {user} = this.props
 
-    let matchMakingInfo = {
+    let userMatchMakingInfo = {
       id: user._id,
       username: user.username,
       selectedClass: this.state.selectedClass,
@@ -38,20 +41,44 @@ class GameSearchModal extends React.Component {
       loss: user.loss
     }
 
-    return axios.post(`${serverUrl}/game/findGame`, matchMakingInfo)
-    .then((res) => {
-      this.setState({matchMakingQueId: res.data})
+    let matchMakingQueID = await gameRepository.addToMatchMakingQue(userMatchMakingInfo)
+
+    this.setState({matchMakingQueID: matchMakingQueID})
+
+    this.setupEventListeners()
+  }
+
+  setupEventListeners() {
+    this.matchMakingRef = gameRepository.database.ref(`/match-making-que/${this.state.matchMakingQueID}`)
+    this.matchMakingRef.on('value', (snap) => {
+      try {
+      let {gameID, matchFound} = snap.val()
+
+      if(matchFound) {
+        this.matchMakingRef.update({
+          matchFound: true
+        })
+        this.props.history.push(`/game/${gameID}`)
+        this.matchMakingRef.remove()
+      }
+      }catch(err) {
+        console.log(err)
+      }
     })
   }
 
-  cancelMatchMaking() {
-    return axios.post(`${serverUrl}/game/cancelMatchMaking/${this.state.matchMakingQueId}`)
-    .then((res) => {
-    })
+  removeEventListeners() {
+    this.matchMakingRef.off()
   }
 
+  async cancelMatchMaking() {
+    await gameRepository.cancelMatchMaking(this.state.matchMakingQueID)
+    this.matchMakingRef.off()
+  }
 
-
+  componentWillUnmount() {
+    this.removeEventListeners()
+  }
 
   render() {
     return(
@@ -72,14 +99,17 @@ class GameSearchModal extends React.Component {
 }
 
 const stateToProps = (state) => {
-  console.log(state)
   return {
     user: state.user
   }
 }
 
 const dispatchToProps = (dispatch) => {
-  return {}
+  return {
+    updateGameID: (id) => {
+      dispatch(actions.updateGameID(id))
+    }
+  }
 }
 
-export default connect(stateToProps, dispatchToProps)(GameSearchModal)
+export default withRouter(connect(stateToProps, dispatchToProps)(GameSearchModal))

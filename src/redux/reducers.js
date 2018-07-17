@@ -11,6 +11,7 @@ export var initialBoardState = {
 export default function reducer(state=initialBoardState, action) {
     let payload = action.payload
 
+
     switch (action.type) {
     case actions.update_user_profile:
         return {...state, user: payload}

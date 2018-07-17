@@ -82,7 +82,7 @@ export class Board {
         let wB2 = new Bishop(1, p1)
         this.placePiece(wB2, '75')
     }
-
+  
     boardToJSON() {
         return JSON.stringify(this.board)
     }
@@ -414,7 +414,7 @@ export class Knight extends Piece {
         if(this.type === 'Knight') {
             this.possibleMoves.push([[row - 2, column], [row, column + 2], [row + 2, column], [row, column - 2]])
         }
-
+      
         return this.possibleMoves.push([[row - 2, column + 1]],[[row - 1, column + 2]],[[row + 1, column + 2]],[[row + 2, column + 1]],[[row + 2, column - 1]],[[row + 1, column - 2]],[[row - 1, column - 2]],[[row - 2, column - 1]])
     }
 }

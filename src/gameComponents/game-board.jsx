@@ -28,7 +28,9 @@ class GameBoard extends React.Component {
             opponentColor: null,
             opponentSocketID: null,
             reversed: false,
-            gameInitialized: false
+            gameInitialized: false,
+            userConnected: false,
+            opponentConnected: false
         }
 
         this.gameRef = database.ref(`/games/${this.state.gameID}`)
@@ -122,6 +124,25 @@ class GameBoard extends React.Component {
         this.socket.on('connect', () => {
             this.socket.emit('join room', this.state.gameID)
         })
+
+        this.socket.on('opponent connection status', (status) => {
+            this.setState({
+                opponentConnected: status
+            })
+        })
+
+        this.checkSocketConnection = setInterval(() => {
+            if(this.socket) {
+                this.socket.emit('check opponent connection', this.state.gameID)
+                this.setState({
+                    userConnected: this.socket.connected
+                })
+            }else {
+                this.setState(() => {
+                    false
+                })
+            }
+        }, 150)
 
         this.socket.on('opponent piece move', (pieceMove) => {
             Chess.movePositions(pieceMove.oldPosition, pieceMove.newPosition)

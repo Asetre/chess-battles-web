@@ -40,46 +40,59 @@ export class Board {
     })
   }
 
-  setUpGame(p1, p2) {
-    let bPawns = ['10', '11', '12', '13', '14', '15', '16', '17'].forEach(pos => {
-      this.placePiece(new Pawn(0, p2), pos)
+  setUpGame(playerOne, playerTwo) {
+
+    let p1 = playerOne.color === 1 ? playerOne : playerTwo,
+      p2 = playerTwo.color === 0 ? playerTwo : playerOne,
+      pawnPositions = [
+        '10', '11', '12', '13', '14', '15', '16', '17',
+        '60', '61', '62', '63', '64', '65', '66', '67'
+      ]
+
+    pawnPositions.forEach((pos) => {
+      let side = pos[0]
+      if(side === '1') {
+        this.placePiece(new Pawn(0, p2.type), pos)
+      }else if(side === '6') {
+        this.placePiece(new Pawn(1, p1.type), pos)
+      }
     })
-    let bK = new King(0, p2)
+
+    let bK = new King(0, p2.type),
+      bQ = new Queen(0, p2.type),
+      bR1 = new Rook(0, p2.type),
+      bR2 = new Rook(0, p2.type),
+      bKn1 = new Knight(0, p2.type),
+      bKn2 = new Knight(0, p2.type),
+      bB1 = new Bishop(0, p2.type),
+      bB2 = new Bishop(0, p2.type)
+
     this.placePiece(bK, '04')
-    let bQ = new Queen(0, p2)
     this.placePiece(bQ, '03')
-    let bR1 = new Rook(0, p2)
     this.placePiece(bR1, '00')
-    let bR2 = new Rook(0, p2)
     this.placePiece(bR2, '07')
-    let bKn1 = new Knight(0, p2)
     this.placePiece(bKn1, '01')
-    let bKn2 = new Knight(0, p2)
     this.placePiece(bKn2, '06')
-    let bB1 = new Bishop(0, p2)
     this.placePiece(bB1, '02')
-    let bB2 = new Bishop(0, p2)
     this.placePiece(bB2, '05')
 
 
-    let wPawns = ['60', '61', '62', '63', '64', '65', '66', '67'].forEach(pos => {
-      this.placePiece(new Pawn(1, p1), pos)
-    })
-    let wK = new King(1, p1)
+    let wK = new King(1, p1.type),
+      wQ = new Queen(1, p1.type),
+      wR1 = new Rook(1, p1.type),
+      wR2 = new Rook(1, p1.type),
+      wKn1 = new Knight(1, p1.type),
+      wKn2 = new Knight(1, p1.type),
+      wB1 = new Bishop(1, p1.type),
+      wB2 = new Bishop(1, p1.type)
+
     this.placePiece(wK, '74')
-    let wQ = new Queen(1, p1)
     this.placePiece(wQ, '73')
-    let wR1 = new Rook(1, p1)
     this.placePiece(wR1, '70')
-    let wR2 = new Rook(1, p1)
     this.placePiece(wR2, '77')
-    let wKn1 = new Knight(1, p1)
     this.placePiece(wKn1, '71')
-    let wKn2 = new Knight(1, p1)
     this.placePiece(wKn2, '76')
-    let wB1 = new Bishop(1, p1)
     this.placePiece(wB1, '72')
-    let wB2 = new Bishop(1, p1)
     this.placePiece(wB2, '75')
   }
 
@@ -370,7 +383,6 @@ class Piece {
           }
         })
       } catch (err) {
-        console.log(err)
       }
 
       return newDir
@@ -632,7 +644,6 @@ export class Pawn extends Piece {
           this.possibleMoves.push([[row - 2, column]])
         }
       } else {
-        console.log(board)
         if (board.isTileEmpty([row + 1, column])) {
           this.possibleMoves.push([[row + 2, column]])
         }

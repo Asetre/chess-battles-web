@@ -7,27 +7,31 @@ import firebase from 'firebase'
 import io from 'socket.io-client'
 
 import Board from './board'
+import { access } from 'fs'
+import { callbackify } from 'util'
 
 const database = firebase.database()
 
 const StyledGameBoard = styled.div`
 `
 
-class GameBoard extends React.Component {
+class GameBoard extends React.PureComponent {
   constructor(props) {
     super()
     this.state = {
       gameID: props.gameID,
       turn: 1,
-      currentPlayerTurn: 1,
-      userColor: null,
       totalMoves: 0,
-      userClass: null,
-      opponentClass: null,
-      opponentColor: null,
+      userGameInfo: {
+        color: null,
+        type: null
+      },
+      opponentGameInfo: {
+        color: null,
+        type: null
+      },
       reversed: false,
       gameInitialized: false,
-      gameInitCalled: false,
       userConnected: false,
       opponentConnected: false
     }
@@ -46,51 +50,38 @@ class GameBoard extends React.Component {
     }
   }
 
-  componentDidMount = () => {
+  componentDidMount() {
     this.setupEventListeners()
+    this.initializeGame()
   }
 
-  componentWillUnmount = () => {
+  componentWillUnmount() {
     this.removeEventListeners()
   }
 
   initializeGame() {
-    this.setState({
-      gameInitCalled: true
-    })
     Chess.resetBoard()
     this.gameRef.once('value', (snap) => {
-      let state = this.state
-      let data = snap.val()
-      let users = data.users
-      let boardState = data.boardState
-      let turn = data.turn
-      let userClass = state.userClass
-      let opponentClass = state.opponentClass
+
+      let gameData = snap.val(),
+        users = gameData.users,
+        boardState = gameData.boardState,
+        turn = gameData.turn
 
       this.identifyUserColorsAndClass(users)
-      this.config.reversed = this.state.userColor === 1 ? false : true
-      let p1Class = null
-      let p2Class = null
-
-      if (this.state.userColor === 1) {
-        p1Class = userClass
-        p2Class = opponentClass
-      } else {
-        p1Class = opponentClass
-        p2Class = userClass
-      }
+      this.config.reversed = this.state.userGameInfo.color === 1 ? false : true
 
       if (boardState) {
         Chess.jsonToBoard(boardState)
-        this.setState({ currentPlayerTurn: turn })
+        this.setState((prevState) => {
+          return { ...prevState, turn: turn }
+        })
       } else {
-        Chess.setUpGame(p1Class, p2Class)
+        let { userGameInfo, opponentGameInfo } = this.state
+        Chess.setUpGame(userGameInfo, opponentGameInfo)
       }
-
-      this.setState({
-        gameInitialized: true
-      })
+      this.setState({gameInitialized: true})
+      this.child.checkKings()
     })
   }
 
@@ -120,21 +111,24 @@ class GameBoard extends React.Component {
       }
     }, 150)
 
-    this.socket.on('opponent piece move', (pieceMove) => {
-      Chess.movePositions(pieceMove.oldPosition, pieceMove.newPosition)
-      let updatedTurn = pieceMove.playerColor === 1 ? 0 : 1
-      this.setState({
-        currentPlayerTurn: updatedTurn
-      })
+    this.socket.on('piece move', (pieceMove) => {
+      if(pieceMove.playerColor !== this.state.userGameInfo.color) {
+        Chess.movePositions(pieceMove.oldPosition, pieceMove.newPosition)
+        this.child.checkKings()
+        let updatedTurn = pieceMove.playerColor === 1 ? 0 : 1
+        this.setState((prevState) => {
+          return {...prevState, turn: updatedTurn}
+        })
+      }
     })
   }
 
-  handlePieceMove(oldPosition, newPosition) {
+  handlePieceMove(oldPosition, newPosition, sendToServer) {
     let state = this.state
     let pieceMove = {
       oldPosition,
       newPosition,
-      playerColor: state.userColor,
+      playerColor: state.userGameInfo.color,
       gameID: state.gameID
     }
 
@@ -145,7 +139,10 @@ class GameBoard extends React.Component {
       boardState: jsonBoard
     }
 
-    this.setState({ currentPlayerTurn: updatedTurn })
+    this.setState((prevState) => {
+      return {...prevState, turn: updatedTurn}
+    })
+
     this.socket.emit('piece move', pieceMove)
     this.gameRef.update(updates)
   }
@@ -162,37 +159,36 @@ class GameBoard extends React.Component {
   }
 
   identifyUserColorsAndClass(users) {
-    users.forEach((user, index) => {
-      if (user) {
-        let currentUser = user.user
-        if (currentUser.id == this.props.user._id) {
-          let stateToUpdate = {
-            userColor: index,
-            userClass: currentUser.selectedClass
-          }
+    const setPlayerColorsAndClass = (playerOne, playerTwo) => {
+      let userID = this.props.user._id,
+        userGameInfo = playerOne.id === userID ? playerOne : playerTwo,
+        opponentGameInfo = playerTwo.id === userID ? playerTwo : playerOne
 
-          this.setState(stateToUpdate)
-        } else {
-          let stateToUpdate = {
-            opponentColor: index,
-            opponentClass: currentUser.selectedClass
-          }
-          this.setState(stateToUpdate)
+
+      this.setState((prevState) => {
+        return { ...prevState, userGameInfo, opponentGameInfo}
+      })
+    }
+
+    users = users.reduce((acc, curr, index) => {
+      let user = curr.user,
+        formatedUser = {
+          id: user.id,
+          color: index,
+          type: user.type
         }
+      acc.push(formatedUser)
+      return acc
+    }, [])
 
-      } else {
-        //abort game
-      }
-    })
+    setPlayerColorsAndClass(...users)
   }
 
   render() {
-    let state = this.state
-    this.config.userTeam = this.state.userColor
-    if (!state.gameInitialized && state.userConnected && state.opponentConnected) this.initializeGame()
 
+    let state = this.state
     return (
-      <Board {...this.config} gameInitialized={state.gameInitialized} turn={state.currentPlayerTurn} userTeam={this.state.userColor} />
+      <Board ref={(instance) => this.child = instance} {...this.config} gameInitialized={state.gameInitialized} turn={state.turn} userTeam={state.userGameInfo.color} />
     )
   }
 }

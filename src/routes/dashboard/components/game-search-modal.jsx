@@ -1,9 +1,9 @@
 import React from 'react'
-import {connect} from 'react-redux'
-import {Redirect, withRouter} from 'react-router-dom'
+import { connect } from 'react-redux'
+import { Redirect, withRouter } from 'react-router-dom'
 import styled from 'styled-components'
 import Btn from '../../../components/button'
-import {serverUrl} from '../../../config'
+import { serverUrl } from '../../../config'
 import * as actions from '../../../redux/actions'
 import * as gameRepository from '../../../repository/game'
 
@@ -27,23 +27,23 @@ class GameSearchModal extends React.Component {
   }
 
   handleSelectChange(e) {
-    this.setState({selectedClass: e.target.value})
+    this.setState({ selectedClass: e.target.value })
   }
 
   async findGame() {
-    let {user} = this.props
+    let { user } = this.props
 
     let userMatchMakingInfo = {
       id: user._id,
       username: user.username,
-      selectedClass: this.state.selectedClass,
+      type: this.state.selectedClass,
       win: user.win,
       loss: user.loss
     }
 
     let matchMakingQueID = await gameRepository.addToMatchMakingQue(userMatchMakingInfo)
 
-    this.setState({matchMakingQueID: matchMakingQueID})
+    this.setState({ matchMakingQueID: matchMakingQueID })
 
     this.setupEventListeners()
   }
@@ -52,16 +52,16 @@ class GameSearchModal extends React.Component {
     this.matchMakingRef = gameRepository.database.ref(`/match-making-que/${this.state.matchMakingQueID}`)
     this.matchMakingRef.on('value', (snap) => {
       try {
-      let {gameID, matchFound} = snap.val()
+        let { gameID, matchFound } = snap.val()
 
-      if(matchFound) {
-        this.matchMakingRef.update({
-          matchFound: true
-        })
-        this.props.history.push(`/game/${gameID}`)
-        this.matchMakingRef.remove()
-      }
-      }catch(err) {
+        if (matchFound) {
+          this.matchMakingRef.update({
+            matchFound: true
+          })
+          this.props.history.push(`/game/${gameID}`)
+          this.matchMakingRef.remove()
+        }
+      } catch (err) {
         console.log(err)
       }
     })
@@ -81,7 +81,7 @@ class GameSearchModal extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <StyledGameSearchModal>
         <select value={this.state.selectedClass} onChange={this.handleSelectChange}>
           <option value="Assasin">Assasin</option>
@@ -91,7 +91,7 @@ class GameSearchModal extends React.Component {
           <option value="Mercenary">Mercenary</option>
         </select>
 
-        <Btn text='Search for game' size='medium' onClick={this.findGame}/>
+        <Btn text='Search for game' size='medium' onClick={this.findGame} />
         <Btn text='Cancel search' size='medium' onClick={this.cancelMatchMaking} />
       </StyledGameSearchModal>
     )

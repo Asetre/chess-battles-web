@@ -13,8 +13,16 @@ const StyledDemo = styled.div`
 `
 const Demo = props => {
   //Initialize chess board
+  let playerOne = {
+      color: 1,
+      type: 'Mercenary'
+    },
+    playerTwo = {
+      color: 0,
+      type: 'Conqueror'
+    }
   Chess.resetBoard()
-  Chess.setUpGame('Mercenary', 'Crusader')
+  Chess.setUpGame(playerOne, playerTwo)
 
   const config = {
     reversed: false,

@@ -29,13 +29,14 @@ flex-wrap: wrap;
 }
 `
 
-class Board extends React.Component {
+class Board extends React.PureComponent {
   constructor(props) {
     super()
     this.gameTileClick = this.gameTileClick.bind(this)
     this.demoTileClick = this.demoTileClick.bind(this)
     this.updatePieceSelected = this.updatePieceSelected.bind(this)
     this.updateValidMoves = this.updateValidMoves.bind(this)
+    this.checkKings = this.checkKings.bind(this)
     this.handleTileClick = props.demo ? this.demoTileClick : this.gameTileClick
 
     this.state = {
@@ -51,31 +52,34 @@ class Board extends React.Component {
     })
   }
 
+  checkKings() {
+    let kingsPositions = Chess.getKingsPositions(),
+      kingsInCheck = Chess.kingsInCheck(kingsPositions) 
+
+
+    if(kingsInCheck.length !== 0) {
+      this.setState({kingsInCheck})
+    }else {
+      this.setState({kingsInCheck: []})
+    }
+
+    if(kingsPositions && kingsPositions.length < 2 && kingsPositions.length >0) {
+      let winner = kingsPositions[0].team
+      this.props.handleGameOver(winner)
+    }
+  }
+
   gameTileClick(newPosition) {
     let selectedPiece = this.state.selectedPiece
     if (selectedPiece) {
       if (this.state.validMoves.find(pos => pos === newPosition)) {
-        let oldPosition = selectedPiece.position
         const piece = Chess.getPosition(this.state.selectedPiece)
 
         Chess.movePiece(piece, newPosition)
         this.props.handlePieceMove(this.state.selectedPiece, newPosition)
         this.updatePieceSelected(null)
         this.updateValidMoves([])
-        let kingsPositions = Chess.getKingsPositions()
-        let kingsInCheck =Chess.kingsInCheck(kingsPositions) 
-
-        if(kingsInCheck.length !== 0) {
-          this.setState({kingsInCheck: kingsInCheck})
-        }else {
-          this.setState({kingsInCheck: []})
-        }
-
-        if(kingsPositions && kingsPositions.length < 2 && kingsPositions.length >0) {
-          let winner = kingsPositions[0].team
-          this.props.handleGameOver(winner)
-        }
-
+        this.checkKings()
       } else {
         this.updatePieceSelected(null)
         this.updateValidMoves([])
@@ -126,10 +130,6 @@ class Board extends React.Component {
   render() {
     let props = this.props
 
-    if(props.gameBoard) {
-      Chess.updateBoard(props.gameBoard)
-    }
-
     return (
       <StyledBoard>
         {Chess.board.map((row, r) => {
@@ -158,44 +158,44 @@ class Board extends React.Component {
 
 function getPieceImageFromName(name) {
   switch (name) {
-    case 'White King':
-      return wK
+  case 'White King':
+    return wK
 
-    case 'White Queen':
-      return wQ
+  case 'White Queen':
+    return wQ
 
-    case 'White Rook':
-      return wR
+  case 'White Rook':
+    return wR
 
-    case 'White Knight':
-      return wKn
+  case 'White Knight':
+    return wKn
 
-    case 'White Bishop':
-      return wB
+  case 'White Bishop':
+    return wB
 
-    case 'White Pawn':
-      return wP
+  case 'White Pawn':
+    return wP
 
-    case 'Black King':
-      return bK
+  case 'Black King':
+    return bK
 
-    case 'Black Queen':
-      return bQ
+  case 'Black Queen':
+    return bQ
 
-    case 'Black Rook':
-      return bR
+  case 'Black Rook':
+    return bR
 
-    case 'Black Knight':
-      return bKn
+  case 'Black Knight':
+    return bKn
 
-    case 'Black Bishop':
-      return bB
+  case 'Black Bishop':
+    return bB
 
-    case 'Black Pawn':
-      return bP
+  case 'Black Pawn':
+    return bP
 
-    default:
-      return null
+  default:
+    return null
   }
 }
 

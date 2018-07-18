@@ -1,4 +1,4 @@
-module.exports = {
+{
     "env": {
         "browser": true,
         "es6": true
@@ -17,8 +17,12 @@ module.exports = {
     "rules": {
         "indent": [
             "error",
-            4
+            2
         ],
+	"react/jsx-indent": [
+	    2,
+	    2
+	],
         "linebreak-style": [
             "error",
             "unix"
@@ -32,4 +36,4 @@ module.exports = {
             "never"
         ]
     }
-};
+}

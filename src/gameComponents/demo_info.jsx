@@ -11,23 +11,23 @@ const Vs = styled.h2`
 `
 
 export default () => {
-    return(
-        <Container>
-            <ClassInfo>
-                <div>
-                </div>
-                <div className="text">
-                </div>
-            </ClassInfo>
+  return(
+    <Container>
+      <ClassInfo>
+        <div>
+        </div>
+          <div className="text">
+        </div>
+      </ClassInfo>
 
-            <Vs>VS</Vs>
+        <Vs>VS</Vs>
 
-            <ClassInfo>
-                <div>
-                </div>
-                <div className="text">
-                </div>
-            </ClassInfo>
-        </Container>
-    )
+        <ClassInfo>
+        <div>
+          </div>
+          <div className="text">
+        </div>
+      </ClassInfo>
+    </Container>
+  )
 }

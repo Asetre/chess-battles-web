@@ -6,7 +6,7 @@ const isAuthenticated = () => {
   const expiresAt = localStorage.getItem('expiresAt')
   const accessToken = localStorage.getItem('accessToken')
 
-  const tokenNotExpired =  new Date().getTime() < expiresAt;
+  const tokenNotExpired =  new Date().getTime() < expiresAt
   const accessTokenAvailable = accessToken
 
   if(tokenNotExpired && accessTokenAvailable) {

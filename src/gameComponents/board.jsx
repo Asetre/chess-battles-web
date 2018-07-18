@@ -158,44 +158,44 @@ class Board extends React.Component {
 
 function getPieceImageFromName(name) {
   switch (name) {
-    case 'White King':
-      return wK
+  case 'White King':
+    return wK
 
-    case 'White Queen':
-      return wQ
+  case 'White Queen':
+    return wQ
 
-    case 'White Rook':
-      return wR
+  case 'White Rook':
+    return wR
 
-    case 'White Knight':
-      return wKn
+  case 'White Knight':
+    return wKn
 
-    case 'White Bishop':
-      return wB
+  case 'White Bishop':
+    return wB
 
-    case 'White Pawn':
-      return wP
+  case 'White Pawn':
+    return wP
 
-    case 'Black King':
-      return bK
+  case 'Black King':
+    return bK
 
-    case 'Black Queen':
-      return bQ
+  case 'Black Queen':
+    return bQ
 
-    case 'Black Rook':
-      return bR
+  case 'Black Rook':
+    return bR
 
-    case 'Black Knight':
-      return bKn
+  case 'Black Knight':
+    return bKn
 
-    case 'Black Bishop':
-      return bB
+  case 'Black Bishop':
+    return bB
 
-    case 'Black Pawn':
-      return bP
+  case 'Black Pawn':
+    return bP
 
-    default:
-      return null
+  default:
+    return null
   }
 }
 

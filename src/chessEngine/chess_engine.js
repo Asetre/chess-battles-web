@@ -5,7 +5,7 @@ import { BoardError } from './chess_engine_custom_errors'
 /* ---------------------------------------------------------------------- */
 export class Board {
     constructor() {
-    //The game board represented as a 2d matrix
+        //The game board represented as a 2d matrix
         this.board = [
             [],
             [],
@@ -27,15 +27,15 @@ export class Board {
     fillBoardWithEmptyTiles() {
         this.board.forEach(row => {
             //Inside each row we push 8 columns
-            for(let i = 0; i < 8; i++)  {
+            for (let i = 0; i < 8; i++) {
                 row.push(null)
             }
         })
         //We check to ensure that the board has properly been initialized
         this.board.forEach(row => {
-            if(row.length !== 8) throw new BoardError(`Invalid amount of tiles should be 8, but got ${row.length}`)
+            if (row.length !== 8) throw new BoardError(`Invalid amount of tiles should be 8, but got ${row.length}`)
             row.forEach(tile => {
-                if(tile !== null) throw new BoardError(`Invalid amount of tiles should be null, but got ${tile}`)
+                if (tile !== null) throw new BoardError(`Invalid amount of tiles should be null, but got ${tile}`)
             })
         })
     }
@@ -59,7 +59,7 @@ export class Board {
         let bB1 = new Bishop(0, p2)
         this.placePiece(bB1, '02')
         let bB2 = new Bishop(0, p2)
-        this.placePiece(bB2,'05')
+        this.placePiece(bB2, '05')
 
 
         let wPawns = ['60', '61', '62', '63', '64', '65', '66', '67'].forEach(pos => {
@@ -82,7 +82,7 @@ export class Board {
         let wB2 = new Bishop(1, p1)
         this.placePiece(wB2, '75')
     }
-  
+
     boardToJSON() {
         return JSON.stringify(this.board)
     }
@@ -94,7 +94,7 @@ export class Board {
 
         board.forEach((row) => {
             row.forEach((tile) => {
-                if(tile) {
+                if (tile) {
                     let piece = this.generatePiece(tile.name, tile.type, tile.team, tile.firstMove)
                     this.placePiece(piece, tile.position)
                 }
@@ -106,7 +106,7 @@ export class Board {
 
         name = name.split(' ')[1]
 
-        switch(name) {
+        switch (name) {
         case 'King':
             return new King(team, playerClass)
 
@@ -150,7 +150,7 @@ export class Board {
     }
 
     getPosition(position) {
-        if(!Array.isArray(position)) position = Board.convertPosition(position)
+        if (!Array.isArray(position)) position = Board.convertPosition(position)
         const row = position[0]
         const column = position[1]
 
@@ -158,18 +158,18 @@ export class Board {
     }
 
     placePiece(piece, position) {
-        if(Board.isOffBoard(position)) throw new BoardError('Invalid position, cannot place piece outside of the board')
+        if (Board.isOffBoard(position)) throw new BoardError('Invalid position, cannot place piece outside of the board')
 
-        if(!(piece instanceof Piece)) {
-            if(piece !== null) throw new BoardError('Invalid piece')
+        if (!(piece instanceof Piece)) {
+            if (piece !== null) throw new BoardError('Invalid piece')
         }
-        if(!Array.isArray(position)) position = Board.convertPosition(position)
-        if(position.length !== 2) throw new BoardError('Invalid position')
+        if (!Array.isArray(position)) position = Board.convertPosition(position)
+        if (position.length !== 2) throw new BoardError('Invalid position')
 
         const row = position[0]
         const column = position[1]
 
-        if(piece) piece.position = Board.positionToString(position)
+        if (piece) piece.position = Board.positionToString(position)
         this.board[row][column] = piece
     }
 
@@ -177,19 +177,19 @@ export class Board {
         let kingsPositions = this.getKingsPositions()
         let allPieceMoves = this.getEveryPieceMove()
 
-        if(!kingsPositions) return []
+        if (!kingsPositions) return []
 
         return kingsPositions.reduce((acc, curr) => {
-            if(allPieceMoves.find((pos) => pos === curr)) acc.push(curr)
+            if (allPieceMoves.find((pos) => pos === curr)) acc.push(curr)
             return acc
-        },[])
+        }, [])
     }
 
     getEveryPieceMove() {
         let allValidMoves = []
         this.board.forEach((row) => {
             row.forEach((tile) => {
-                if(tile) {
+                if (tile) {
                     let validMoves = tile.findValidMoves(this)
                     allValidMoves = allValidMoves.concat(validMoves)
                 }
@@ -201,7 +201,7 @@ export class Board {
     getKingsPositions() {
         const kings = this.board.reduce((acc, curr) => {
             curr.forEach((tile) => {
-                if(tile && tile.king) acc.push(tile.position)
+                if (tile && tile.king) acc.push(tile.position)
             })
             return acc
         }, [])
@@ -210,22 +210,22 @@ export class Board {
     }
 
     movePiece(piece, position) {
-        if(!(piece instanceof Piece)) throw new BoardError('Invalid piece')
-        if(!Array.isArray(position)) position = Board.convertPosition(position)
+        if (!(piece instanceof Piece)) throw new BoardError('Invalid piece')
+        if (!Array.isArray(position)) position = Board.convertPosition(position)
 
         const previousPosition = Board.convertPosition(piece.position)
 
-        if(piece !== this.board[previousPosition[0]][previousPosition[1]]) throw new Error('Invalid piece move')
+        if (piece !== this.board[previousPosition[0]][previousPosition[1]]) throw new Error('Invalid piece move')
         this.placePiece(piece, position)
         this.placePiece(null, previousPosition)
         piece.position = Board.positionToString(position)
-        if(piece.name.match('Pawn')) {
-            if(piece.firstMove) piece.firstMove = false
-            if(piece.team === 1 && piece.position[0].match('0')) {
+        if (piece.name.match('Pawn')) {
+            if (piece.firstMove) piece.firstMove = false
+            if (piece.team === 1 && piece.position[0].match('0')) {
                 piece = new Queen(1, null)
                 piece.position = Board.positionToString(position)
                 this.placePiece(piece, position)
-            }else if(piece.team === 0 && piece.position[0].match('7')) {
+            } else if (piece.team === 0 && piece.position[0].match('7')) {
                 piece = new Queen(0, null)
                 piece.position = Board.positionToString(position)
                 this.placePiece(piece, position)
@@ -234,15 +234,15 @@ export class Board {
     }
 
     movePositions(oldPosition, newPosition) {
-        if(!oldPosition && !newPosition || typeof oldPosition !== 'string' || typeof newPosition !== 'string' ) throw new BoardError('Invalid Arguments')
+        if (!oldPosition && !newPosition || typeof oldPosition !== 'string' || typeof newPosition !== 'string') throw new BoardError('Invalid Arguments')
         let piece = this.getPosition(oldPosition)
-        if(!piece) throw new BoardError('Piece does not exist at old location')
+        if (!piece) throw new BoardError('Piece does not exist at old location')
         this.movePiece(piece, newPosition)
     }
 
     isTileEmpty(position) {
-        if(Board.isOffBoard(position)) throw new BoardError('Invalid position, cannot check tile outside of the board')
-        if(!Array.isArray(position)) position = Board.convertPosition(position)
+        if (Board.isOffBoard(position)) throw new BoardError('Invalid position, cannot check tile outside of the board')
+        if (!Array.isArray(position)) position = Board.convertPosition(position)
 
         return this.getPosition(position) === null ? true : false
     }
@@ -259,24 +259,24 @@ export class Board {
             7: 0
         }
 
-        if(Array.isArray(position)) {
-            if(position.length !== 2) throw new BoardError('Invalid position')
+        if (Array.isArray(position)) {
+            if (position.length !== 2) throw new BoardError('Invalid position')
             position.forEach(pos => {
-                if(typeof pos !== 'number') throw new BoardError('Invalid position')
+                if (typeof pos !== 'number') throw new BoardError('Invalid position')
             })
             return position
-        }else if(typeof position === 'number') {
+        } else if (typeof position === 'number') {
             position = position.toString()
         }
         //split the int into two single digit numbers
         position = position.split('')
-        if(position.length > 2) throw new BoardError('Invalid position, string length exceeds limit')
+        if (position.length > 2) throw new BoardError('Invalid position, string length exceeds limit')
         //If the position is a negative number remove the "-" from the position array and add it to the first item
         position = position.map(pos => parseInt(pos, 10))
 
-        if(options) {
-            if(options.reversed) position = position.map(pos => convertMap[pos])
-            if(options.toString) position = Board.positionToString(position)
+        if (options) {
+            if (options.reversed) position = position.map(pos => convertMap[pos])
+            if (options.toString) position = Board.positionToString(position)
         }
 
         return position
@@ -286,45 +286,45 @@ export class Board {
     //This is currenlty not used inside the engine
     //------------------------------------------------
     static positionToNumber(position) {
-    //Take the position array and turn it into a number
-    //ex: [4, 6] ~> 46
-        if(position.length !== 2) throw new BoardError('Position array length must be equal to 2')
+        //Take the position array and turn it into a number
+        //ex: [4, 6] ~> 46
+        if (position.length !== 2) throw new BoardError('Position array length must be equal to 2')
         //Check to see that the position is a number
         position.forEach(int => {
-            if(typeof int !== 'number') throw new BoardError('the position must be a number')
-            if(int > 7 || int < 0) throw new BoardError('the position is outside of the board')
+            if (typeof int !== 'number') throw new BoardError('the position must be a number')
+            if (int > 7 || int < 0) throw new BoardError('the position is outside of the board')
         })
-        return position.reduce((acc, curr) => acc+=curr)
+        return position.reduce((acc, curr) => acc += curr)
     }
     //------------------------------------------------
 
     static positionToString(position) {
-    //Convert array to string
-        if(position.length !== 2) throw new BoardError('Invalid position')
-        if(!Array.isArray(position)) throw new BoardError('Invalid position')
+        //Convert array to string
+        if (position.length !== 2) throw new BoardError('Invalid position')
+        if (!Array.isArray(position)) throw new BoardError('Invalid position')
         let row = parseInt(position[0], 10)
         let column = parseInt(position[1], 10)
 
-        if(row > 7 || row < 0) throw new BoardError('Invalid position')
-        if(column > 7 || column < 0) throw new BoardError('Invalid position')
+        if (row > 7 || row < 0) throw new BoardError('Invalid position')
+        if (column > 7 || column < 0) throw new BoardError('Invalid position')
 
         position.forEach(pos => {
-            if(typeof pos !== 'number') throw new BoardError('Invalid position')
+            if (typeof pos !== 'number') throw new BoardError('Invalid position')
         })
 
         return position.join('')
     }
 
     static isOffBoard(position) {
-        if(typeof position === 'string') position = Board.convertPosition(position)
-        if(!Array.isArray(position)) throw new BoardError('Invalid position')
-        if(position.length > 3) throw new BoardError('Invalid position')
+        if (typeof position === 'string') position = Board.convertPosition(position)
+        if (!Array.isArray(position)) throw new BoardError('Invalid position')
+        if (position.length > 3) throw new BoardError('Invalid position')
 
         let row = parseInt(position[0], 10)
         let column = parseInt(position[1], 10)
 
-        if(row > 7 || row < 0) return true
-        if(column > 7 || column < 0) return true
+        if (row > 7 || row < 0) return true
+        if (column > 7 || column < 0) return true
         return false
     }
 }
@@ -333,7 +333,7 @@ export class Board {
 /* ---------------------------------------------------------------------- */
 class Piece {
     constructor(team) {
-    //1 == white, 0 == black
+        //1 == white, 0 == black
         this.team = team
         //if type is declared create special moves
         this.type = arguments[1]
@@ -342,7 +342,7 @@ class Piece {
         this.possibleMoves = []
     }
     isSameTeam(piece) {
-    //pieceTeam == 1 or 0
+        //pieceTeam == 1 or 0
         return this.team === piece.team ? true : false
     }
 
@@ -351,25 +351,25 @@ class Piece {
 
         let preValidMoves = this.possibleMoves.map(dir => {
             let newDir = []
-            if(!Array.isArray(dir)) throw new BoardError('Invalid position')
+            if (!Array.isArray(dir)) throw new BoardError('Invalid position')
             try {
                 dir.forEach(pos => {
-                    if(!Board.isOffBoard(pos)) {
-                        if(board.isTileEmpty(pos)) {
+                    if (!Board.isOffBoard(pos)) {
+                        if (board.isTileEmpty(pos)) {
                             newDir.push(Board.positionToString(pos))
                         }
-                        else if(!this.isSameTeam(board.getPosition(pos))) {
+                        else if (!this.isSameTeam(board.getPosition(pos))) {
                             newDir.push(Board.positionToString(pos))
-                            if(this.name === 'White Pawn' || this.name === 'Black Pawn') {
-                            }else {
+                            if (this.name === 'White Pawn' || this.name === 'Black Pawn') {
+                            } else {
                                 throw 'break direction iteration'
                             }
-                        }else if(this.isSameTeam(board.getPosition(pos))) {
+                        } else if (this.isSameTeam(board.getPosition(pos))) {
                             throw 'break direction iteration'
                         }
                     }
                 })
-            }catch (err) {
+            } catch (err) {
                 console.log(err)
             }
 
@@ -386,16 +386,16 @@ export class King extends Piece {
         this.name = this.team === 1 ? 'White King' : 'Black King'
     }
 
-    findPossibleMoves(board) {
+    findPossibleMoves() {
         this.possibleMoves = []
         const position = Board.convertPosition(this.position)
         const row = position[0]
         const column = position[1]
 
-        if(this.type === 'Conqueror') {
+        if (this.type === 'Conqueror') {
             this.possibleMoves.push([[row - 2, column], [row, column + 2], [row + 2, column], [row, column - 2]])
         }
-        return this.possibleMoves.push([[row, column - 1]],[[row + 1, column + 1]], [[row + 1, column]], [[row + 1, column - 1]], [[row, column + 1]], [[row - 1, column - 1]], [[row - 1, column]], [[row - 1, column + 1]])
+        return this.possibleMoves.push([[row, column - 1]], [[row + 1, column + 1]], [[row + 1, column]], [[row + 1, column - 1]], [[row, column + 1]], [[row - 1, column - 1]], [[row - 1, column]], [[row - 1, column + 1]])
     }
 }
 
@@ -405,17 +405,17 @@ export class Knight extends Piece {
         this.name = this.team === 1 ? 'White Knight' : 'Black Knight'
     }
 
-    findPossibleMoves(board) {
+    findPossibleMoves() {
         this.possibleMoves = []
         const position = Board.convertPosition(this.position)
         const row = position[0]
         const column = position[1]
 
-        if(this.type === 'Knight') {
+        if (this.type === 'Knight') {
             this.possibleMoves.push([[row - 2, column], [row, column + 2], [row + 2, column], [row, column - 2]])
         }
-      
-        return this.possibleMoves.push([[row - 2, column + 1]],[[row - 1, column + 2]],[[row + 1, column + 2]],[[row + 2, column + 1]],[[row + 2, column - 1]],[[row + 1, column - 2]],[[row - 1, column - 2]],[[row - 2, column - 1]])
+
+        return this.possibleMoves.push([[row - 2, column + 1]], [[row - 1, column + 2]], [[row + 1, column + 2]], [[row + 2, column + 1]], [[row + 2, column - 1]], [[row + 1, column - 2]], [[row - 1, column - 2]], [[row - 2, column - 1]])
     }
 }
 
@@ -425,14 +425,14 @@ export class Rook extends Piece {
         this.name = this.team === 1 ? 'White Rook' : 'Black Rook'
     }
 
-    findPossibleMoves(board) {
+    findPossibleMoves() {
         this.possibleMoves = []
         const position = Board.convertPosition(this.position)
         const row = position[0]
         const column = position[1]
-        this.possibleMoves.push([],[],[],[])
+        this.possibleMoves.push([], [], [], [])
 
-        if(this.type === 'Crusader') {
+        if (this.type === 'Crusader') {
             this.possibleMoves.push([
                 [row - 1, column + 1],
                 [row + 1, column + 1],
@@ -441,25 +441,25 @@ export class Rook extends Piece {
             ])
         }
         //North
-        for(let i = row - 1; i !==  -1; i--) {
+        for (let i = row - 1; i !== -1; i--) {
             this.possibleMoves[0].push(
                 [i, column]
             )
         }
         //East
-        for(let i = column + 1; i < 8; i++) {
+        for (let i = column + 1; i < 8; i++) {
             this.possibleMoves[1].push(
                 [row, i]
             )
         }
         //South
-        for(let i = row + 1; i < 8; i++) {
+        for (let i = row + 1; i < 8; i++) {
             this.possibleMoves[2].push(
                 [i, column]
             )
         }
         //West
-        for(let i = column - 1; i !== -1; i--) {
+        for (let i = column - 1; i !== -1; i--) {
             this.possibleMoves[3].push(
                 [row, i]
             )
@@ -473,28 +473,28 @@ export class Bishop extends Piece {
         this.name = this.team === 1 ? 'White Bishop' : 'Black Bishop'
     }
 
-    findPossibleMoves(board) {
+    findPossibleMoves() {
         this.possibleMoves = []
         const position = Board.convertPosition(this.position)
         const row = position[0]
         const column = position[1]
-        this.possibleMoves.push([],[],[],[])
+        this.possibleMoves.push([], [], [], [])
 
         //North East
-        for(let i = row - 1, j = column + 1; i >= 0 && j < 8; i--, j++) {
+        for (let i = row - 1, j = column + 1; i >= 0 && j < 8; i-- , j++) {
             this.possibleMoves[0].push(
                 [i, j]
             )
         }
         //South East
-        for(let i = row + 1, j = column + 1; i < 8 && j < 8; i++, j++) {
+        for (let i = row + 1, j = column + 1; i < 8 && j < 8; i++ , j++) {
             this.possibleMoves[1].push(
                 [i, j]
             )
         }
 
         //South West
-        for(let i = row + 1, j = column - 1; i < 8 && j >= 0; i++, j--) {
+        for (let i = row + 1, j = column - 1; i < 8 && j >= 0; i++ , j--) {
             this.possibleMoves[2].push(
                 [i, j]
             )
@@ -502,13 +502,13 @@ export class Bishop extends Piece {
         }
 
         //North West
-        for(let i = row - 1, j = column - 1; i >= 0 && j >= 0; i--, j--) {
+        for (let i = row - 1, j = column - 1; i >= 0 && j >= 0; i-- , j--) {
             this.possibleMoves[3].push(
                 [i, j]
             )
         }
 
-        if(this.type === 'Assasin') {
+        if (this.type === 'Assasin') {
             this.possibleMoves.push([[row + 3, column], [row - 3, column]])
         }
 
@@ -522,59 +522,59 @@ export class Queen extends Piece {
         this.name = this.team === 1 ? 'White Queen' : 'Black Queen'
     }
 
-    findPossibleMoves(board) {
+    findPossibleMoves() {
         this.possibleMoves = []
         const position = Board.convertPosition(this.position)
         const row = position[0]
         const column = position[1]
-        for(let i = 0; i < 8; i++) {
+        for (let i = 0; i < 8; i++) {
             this.possibleMoves.push([])
         }
 
         //North
-        for(let i = row - 1; i !==  -1; i--) {
+        for (let i = row - 1; i !== -1; i--) {
             this.possibleMoves[0].push(
                 [i, column]
             )
         }
         //North East
-        for(let i = row - 1, j = column + 1; i >= 0 && j < 8; i--, j++) {
+        for (let i = row - 1, j = column + 1; i >= 0 && j < 8; i-- , j++) {
             this.possibleMoves[1].push(
                 [i, j]
             )
         }
         //East
-        for(let i = column + 1; i < 8; i++) {
+        for (let i = column + 1; i < 8; i++) {
             this.possibleMoves[2].push(
                 [row, i]
             )
         }
         //South East
-        for(let i = row + 1, j = column + 1; i < 8 && j < 8; i++, j++) {
+        for (let i = row + 1, j = column + 1; i < 8 && j < 8; i++ , j++) {
             this.possibleMoves[3].push(
                 [i, j]
             )
         }
         //South
-        for(let i = row + 1; i < 8; i++) {
+        for (let i = row + 1; i < 8; i++) {
             this.possibleMoves[4].push(
                 [i, column]
             )
         }
         //South West
-        for(let i = row + 1, j = column - 1; i < 8 && j >= 0; i++, j--) {
+        for (let i = row + 1, j = column - 1; i < 8 && j >= 0; i++ , j--) {
             this.possibleMoves[5].push(
                 [i, j]
             )
         }
         //West
-        for(let i = column - 1; i !== -1; i--) {
+        for (let i = column - 1; i !== -1; i--) {
             this.possibleMoves[6].push(
                 [row, i]
             )
         }
         //North West
-        for(let i = row - 1, j = column - 1; i >= 0 && j >= 0; i--, j--) {
+        for (let i = row - 1, j = column - 1; i >= 0 && j >= 0; i-- , j--) {
             this.possibleMoves[7].push(
                 [i, j]
             )
@@ -586,7 +586,7 @@ export class Pawn extends Piece {
     constructor(team, type, firstMove) {
         super(team, type)
         this.firstMove = true
-        if(firstMove) {
+        if (firstMove) {
             this.firstMove = firstMove
         }
         this.doubleMove = false
@@ -597,11 +597,11 @@ export class Pawn extends Piece {
         const dir = []
         tiles.map(pos => {
             const piece = board.getPosition(pos)
-            if(!Board.isOffBoard(pos)) {
-                if(!board.isTileEmpty(pos)) {
-                    if(!this.isSameTeam(piece)) {
-                        if(piece.name === 'White Pawn' || piece.name === 'Black Pawn') {
-                            if(piece.doubleMove) {
+            if (!Board.isOffBoard(pos)) {
+                if (!board.isTileEmpty(pos)) {
+                    if (!this.isSameTeam(piece)) {
+                        if (piece.name === 'White Pawn' || piece.name === 'Black Pawn') {
+                            if (piece.doubleMove) {
                                 dir.push(pos)
                             }
                         }
@@ -618,32 +618,32 @@ export class Pawn extends Piece {
         const row = position[0]
         const column = position[1]
 
-        if(this.type === 'Mercenary') {
+        if (this.type === 'Mercenary') {
             let possibleSpecialMove = [[row, column + 1], [row, column - 1]].map(pos => {
-                if(!Board.isOffBoard(pos)) {
-                    if(board.isTileEmpty(pos)) return pos
+                if (!Board.isOffBoard(pos)) {
+                    if (board.isTileEmpty(pos)) return pos
                 }
             }).filter(Boolean)
             this.possibleMoves.push(possibleSpecialMove)
         }
-        if(this.firstMove) {
-            if(this.team === 1) {
-                if(board.isTileEmpty([row - 1, column])) {
+        if (this.firstMove) {
+            if (this.team === 1) {
+                if (board.isTileEmpty([row - 1, column])) {
                     this.possibleMoves.push([[row - 2, column]])
                 }
-            }else {
+            } else {
                 console.log(board)
-                if(board.isTileEmpty([row + 1, column])) {
+                if (board.isTileEmpty([row + 1, column])) {
                     this.possibleMoves.push([[row + 2, column]])
                 }
             }
         }
 
-        if(this.team === 1) {
+        if (this.team === 1) {
             let possibleAttacks = [[row - 1, column - 1], [row - 1, column + 1]].map(pos => {
-                if(!Board.isOffBoard(pos)) {
-                    if(!board.isTileEmpty(pos)) {
-                        if(!this.isSameTeam(board.getPosition(pos))) {
+                if (!Board.isOffBoard(pos)) {
+                    if (!board.isTileEmpty(pos)) {
+                        if (!this.isSameTeam(board.getPosition(pos))) {
                             return pos
                         }
                     }
@@ -651,24 +651,24 @@ export class Pawn extends Piece {
             }).filter(Boolean)
 
             this.possibleMoves.push(possibleAttacks)
-            if(!Board.isOffBoard([row - 1, column])) {
-                if(board.isTileEmpty([row - 1, column])) {
+            if (!Board.isOffBoard([row - 1, column])) {
+                if (board.isTileEmpty([row - 1, column])) {
                     this.possibleMoves.push([[row - 1, column]])
                 }
             }
-        }else {
+        } else {
             let possibleAttacks = [[row + 1, column - 1], [row + 1, column + 1]].map(pos => {
-                if(!Board.isOffBoard(pos)) {
-                    if(!board.isTileEmpty(pos)) {
-                        if(!this.isSameTeam(board.getPosition(pos))) {
+                if (!Board.isOffBoard(pos)) {
+                    if (!board.isTileEmpty(pos)) {
+                        if (!this.isSameTeam(board.getPosition(pos))) {
                             return pos
                         }
                     }
                 }
             }).filter(Boolean)
             this.possibleMoves.push(possibleAttacks)
-            if(!Board.isOffBoard([row + 1, column])) {
-                if(board.isTileEmpty([row + 1, column])) {
+            if (!Board.isOffBoard([row + 1, column])) {
+                if (board.isTileEmpty([row + 1, column])) {
                     this.possibleMoves.push([[row + 1, column]])
                 }
             }

@@ -1,16 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import Chess, * as Engine from '../chessEngine/chess_engine'
-import firebase from 'firebase'
-import io from 'socket.io-client'
+import * as GameRepository from './gameRepository'
+import * as GameService from './gameService'
 
 import Board from './board'
-import { access } from 'fs'
-import { callbackify } from 'util'
-
-const database = firebase.database()
 
 const StyledGameBoard = styled.div`
 `
@@ -33,10 +28,10 @@ class GameBoard extends React.PureComponent {
       reversed: false,
       gameInitialized: false,
       userConnected: false,
-      opponentConnected: false
+      opponentConnected: false,
+      gameOver: false
     }
 
-    this.gameRef = database.ref(`/games/${this.state.gameID}`)
     this.setupEventListeners = this.setupEventListeners.bind(this)
     this.initializeGame = this.initializeGame.bind(this)
     this.identifyUserColorsAndClass = this.identifyUserColorsAndClass.bind(this)
@@ -59,59 +54,37 @@ class GameBoard extends React.PureComponent {
     this.removeEventListeners()
   }
 
-  initializeGame() {
+  async initializeGame() {
+    let gameData = await GameRepository.getGameInfo()
+    let users = gameData.users
+    let turn = gameData.turn
+    let boardState = gameData.boardState
+
     Chess.resetBoard()
-    this.gameRef.once('value', (snap) => {
 
-      let gameData = snap.val(),
-        users = gameData.users,
-        boardState = gameData.boardState,
-        turn = gameData.turn
+    this.identifyUserColorsAndClass(users)
+    this.config.reversed = this.state.userGameInfo.color === 1 ? false : true
 
-      this.identifyUserColorsAndClass(users)
-      this.config.reversed = this.state.userGameInfo.color === 1 ? false : true
-
-      if (boardState) {
-        Chess.jsonToBoard(boardState)
-        this.setState((prevState) => {
-          return { ...prevState, turn: turn }
-        })
-      } else {
-        let { userGameInfo, opponentGameInfo } = this.state
-        Chess.setUpGame(userGameInfo, opponentGameInfo)
-      }
-      this.setState({gameInitialized: true})
-      this.child.checkKings()
-    })
+    if (boardState) {
+      Chess.jsonToBoard(boardState)
+      this.setState((prevState) => {
+        return { ...prevState, turn: turn }
+      })
+    } else {
+      let { userGameInfo, opponentGameInfo } = this.state
+      Chess.setUpGame(userGameInfo, opponentGameInfo)
+    }
+    this.setState({gameInitialized: true})
+    this.child.checkKings()
   }
 
   setupEventListeners() {
-    this.socket = io('http://localhost:8080')
-    this.opponentSocketIDRef = database.ref(`/games/${this.state.gameID}/users`)
-    this.socket.on('connect', () => {
-      this.socket.emit('join room', this.state.gameID)
+    const socket = GameRepository.initializeListeners(this.state.gameID)
+    socket.on('connect', () => {
+      GameRepository.joinRoom(this.state.gameID)
     })
 
-    this.socket.on('opponent connection status', (status) => {
-      this.setState({
-        opponentConnected: status
-      })
-    })
-
-    this.checkSocketConnection = setInterval(() => {
-      if (this.socket) {
-        this.socket.emit('check opponent connection', this.state.gameID)
-        this.setState({
-          userConnected: this.socket.connected
-        })
-      } else {
-        this.setState(() => {
-          false
-        })
-      }
-    }, 150)
-
-    this.socket.on('piece move', (pieceMove) => {
+    socket.on('piece move', (pieceMove) => {
       if(pieceMove.playerColor !== this.state.userGameInfo.color) {
         Chess.movePositions(pieceMove.oldPosition, pieceMove.newPosition)
         this.child.checkKings()
@@ -123,72 +96,45 @@ class GameBoard extends React.PureComponent {
     })
   }
 
-  handlePieceMove(oldPosition, newPosition, sendToServer) {
-    let state = this.state
-    let pieceMove = {
-      oldPosition,
-      newPosition,
-      playerColor: state.userGameInfo.color,
-      gameID: state.gameID
-    }
-
-    let jsonBoard = Chess.boardToJSON()
-    let updatedTurn = pieceMove.playerColor === 1 ? 0 : 1
-    let updates = {
-      turn: updatedTurn,
-      boardState: jsonBoard
-    }
+  handlePieceMove(oldPosition, newPosition) {
+    let {pieceMove, updatedTurn, updates} = GameService.pieceMove(oldPosition, newPosition, this.state)
 
     this.setState((prevState) => {
       return {...prevState, turn: updatedTurn}
     })
 
-    this.socket.emit('piece move', pieceMove)
-    this.gameRef.update(updates)
+    GameRepository.emitPieceMove(pieceMove, updates)
   }
 
   handleGameOver(winner) {
-    console.log('game over')
-    console.log(winner)
+    let loser = winner === 1 ? 0 : 1
+    let updates = {
+      winner,
+      loser
+    }
+    GameRepository.gameOver()
+    GameRepository.updateGameInfo(updates)
+    this.setState((prevState) => {
+      return {...prevState, gameOver: true}
+    })
+    this.removeEventListeners()
   }
 
   removeEventListeners() {
-    this.gameRef.off()
-    this.opponentSocketIDRef.off()
-    this.socket.off()
+    GameRepository.removeListeners()
   }
 
   identifyUserColorsAndClass(users) {
-    const setPlayerColorsAndClass = (playerOne, playerTwo) => {
-      let userID = this.props.user._id,
-        userGameInfo = playerOne.id === userID ? playerOne : playerTwo,
-        opponentGameInfo = playerTwo.id === userID ? playerTwo : playerOne
-
-
-      this.setState((prevState) => {
-        return { ...prevState, userGameInfo, opponentGameInfo}
-      })
-    }
-
-    users = users.reduce((acc, curr, index) => {
-      let user = curr.user,
-        formatedUser = {
-          id: user.id,
-          color: index,
-          type: user.type
-        }
-      acc.push(formatedUser)
-      return acc
-    }, [])
-
-    setPlayerColorsAndClass(...users)
+    let identifiedUsers = GameService.identifyUserColorAndClass(users, this.props.user._id)
+    this.setState((prevState) => {
+      return {...prevState, ...identifiedUsers}
+    })
   }
 
   render() {
-
     let state = this.state
     return (
-      <Board ref={(instance) => this.child = instance} {...this.config} gameInitialized={state.gameInitialized} turn={state.turn} userTeam={state.userGameInfo.color} />
+      <Board ref={(instance) => this.child = instance} {...this.config} gameInitialized={state.gameInitialized} turn={state.turn} userTeam={state.userGameInfo.color} gameOver={state.gameOver}/>
     )
   }
 }

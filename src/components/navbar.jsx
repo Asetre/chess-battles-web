@@ -39,14 +39,15 @@ class Navbar extends React.Component {
     this.getUserInfo = this.getUserInfo.bind(this)
 
     this.state = {
-      logginIn: false
+      loggedIn: false
     }
 
-    if(this.persistUserSession()) return
+    if (this.persistUserSession()) return
 
     let self = this
 
     lock.on('authenticated', function (authResult) {
+      this.setState({loggedIn: true})
       self.getUserInfo(authResult.accessToken, authResult.expiresIn)
     })
   }
@@ -55,10 +56,10 @@ class Navbar extends React.Component {
     let accessToken = localStorage.getItem('accessToken')
     let expiresAt = JSON.parse(localStorage.getItem('expiresAt'))
 
-    if(expiresAt > new Date().getTime()) {
+    if (expiresAt > new Date().getTime()) {
       this.getUserInfo(accessToken, expiresAt)
       this.setState({
-        logginIn: true
+        loggedIn: true
       })
       return true
     }
@@ -80,9 +81,9 @@ class Navbar extends React.Component {
             if (res.status !== 200) throw 'Failed to get user profile'
             const userProfile = res.data
 
-            if(expiresIn) {
+            if (expiresIn) {
               var expiresAt = JSON.stringify((expiresIn * 1000) + new Date().getTime())
-            }else {
+            } else {
               var expiresAt = expiresIn
             }
 

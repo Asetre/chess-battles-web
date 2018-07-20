@@ -56,7 +56,6 @@ class Board extends React.PureComponent {
     let kingsPositions = Chess.getKingsPositions(),
       kingsInCheck = Chess.kingsInCheck(kingsPositions) 
 
-
     if(kingsInCheck.length !== 0) {
       this.setState({kingsInCheck})
     }else {
@@ -64,13 +63,14 @@ class Board extends React.PureComponent {
     }
 
     if(kingsPositions && kingsPositions.length < 2 && kingsPositions.length >0) {
-      let winner = kingsPositions[0].team
+      let winner = Chess.getPosition(kingsPositions[0]).team
       this.props.handleGameOver(winner)
     }
   }
 
   gameTileClick(newPosition) {
     let selectedPiece = this.state.selectedPiece
+    if(this.props.gameOver) return
     if (selectedPiece) {
       if (this.state.validMoves.find(pos => pos === newPosition)) {
         const piece = Chess.getPosition(this.state.selectedPiece)

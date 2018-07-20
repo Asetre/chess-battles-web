@@ -38,13 +38,17 @@ class Navbar extends React.Component {
     this.persistUserSession = this.persistUserSession.bind(this)
     this.getUserInfo = this.getUserInfo.bind(this)
 
+    this.state = {
+      logginIn: false
+    }
+
     if(this.persistUserSession()) return
 
     let self = this
 
-    lock.on("authenticated", function (authResult) {
+    lock.on('authenticated', function (authResult) {
       self.getUserInfo(authResult.accessToken, authResult.expiresIn)
-    });
+    })
   }
 
   persistUserSession() {
@@ -53,6 +57,9 @@ class Navbar extends React.Component {
 
     if(expiresAt > new Date().getTime()) {
       this.getUserInfo(accessToken, expiresAt)
+      this.setState({
+        logginIn: true
+      })
       return true
     }
     return false
@@ -64,7 +71,7 @@ class Navbar extends React.Component {
     lock.getUserInfo(accessToken, function (err, profile) {
       if (err) {
         console.log(err)
-        return;
+        return
       }
 
       if (profile.sub) {
@@ -74,12 +81,12 @@ class Navbar extends React.Component {
             const userProfile = res.data
 
             if(expiresIn) {
-            var expiresAt = JSON.stringify((expiresIn * 1000) + new Date().getTime());
+              var expiresAt = JSON.stringify((expiresIn * 1000) + new Date().getTime())
             }else {
               var expiresAt = expiresIn
             }
 
-            localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('accessToken', accessToken)
             localStorage.setItem('expiresAt', expiresAt)
 
             self.props.updateUserProfile(userProfile)
@@ -89,7 +96,7 @@ class Navbar extends React.Component {
           })
       }
 
-    });
+    })
   }
 
   handleLogin() {

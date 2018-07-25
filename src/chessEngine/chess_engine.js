@@ -51,9 +51,9 @@ export class Board {
 
     pawnPositions.forEach((pos) => {
       let side = pos[0]
-      if(side === '1') {
+      if (side === '1') {
         this.placePiece(new Pawn(0, p2.type), pos)
-      }else if(side === '6') {
+      } else if (side === '6') {
         this.placePiece(new Pawn(1, p1.type), pos)
       }
     })

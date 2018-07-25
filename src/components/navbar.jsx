@@ -1,11 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import Btn from './button'
+import {NavBtnPrimary, NavBtnSecondary} from './button'
 import Auth0Lock from 'auth0-lock'
 import axios from 'axios'
 import { serverUrl } from '../config'
 import * as actions from '../redux/actions'
+import {withRouter} from 'react-router-dom'
 
 const lockOptions = {
   autoclose: true,
@@ -15,13 +16,27 @@ const lockOptions = {
 }
 
 const StyledNavbar = styled.div`
+position: absolute;
+z-index: 1000;
 display: flex;
 align-items: center;
+justify-content: space-between;
+height: 100px;
+width: 100%;
+`
+
+const StyledBtnContainer =  styled.div`
+display: flex;
+>div {
+  margin: 0 20px;
+}
 `
 
 const Logo = styled.a`
-color: red;
+color: white;
 font-size: 200%;
+margin: 0 20px;
+font-family: 'Bad Script'
 `
 
 const lock = new Auth0Lock(
@@ -31,7 +46,7 @@ const lock = new Auth0Lock(
 )
 class Navbar extends React.Component {
 
-  constructor(props) {
+  constructor() {
     super()
     this.handleLogin = this.handleLogin.bind(this)
     this.handleSignup = this.handleSignup.bind(this)
@@ -43,11 +58,9 @@ class Navbar extends React.Component {
     }
 
     if (this.persistUserSession()) return
-
     let self = this
 
     lock.on('authenticated', function (authResult) {
-      this.setState({loggedIn: true})
       self.getUserInfo(authResult.accessToken, authResult.expiresIn)
     })
   }
@@ -58,9 +71,6 @@ class Navbar extends React.Component {
 
     if (expiresAt > new Date().getTime()) {
       this.getUserInfo(accessToken, expiresAt)
-      this.setState({
-        loggedIn: true
-      })
       return true
     }
     return false
@@ -115,7 +125,10 @@ class Navbar extends React.Component {
           Chess Battles
         </Logo>
 
-        <Btn text='test' size='nav' onClick={this.handleLogin}></Btn>
+        <StyledBtnContainer>
+          <NavBtnSecondary onClick={this.handleLogin}>Login</NavBtnSecondary>
+          <NavBtnPrimary onClick={() => console.log('sign up')}>Sign up</NavBtnPrimary>
+        </StyledBtnContainer>
       </StyledNavbar>
     )
   }
@@ -135,4 +148,4 @@ const dispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(stateToProps, dispatchToProps)(Navbar)
+export default withRouter(connect(stateToProps, dispatchToProps)(Navbar))

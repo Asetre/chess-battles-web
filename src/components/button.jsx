@@ -1,65 +1,41 @@
-import React from 'react'
 import styled from 'styled-components'
 
-const NavBtn = styled.div`
+export const NavBtnPrimary = styled.div`
 width: 300px;
 font-size: 18px;
-border: 1px solid red;
+background-color: #62BCFA;
 text-align: center;
+color: white;
+padding: 10px 20px;
 `
 
-const SmallBtn = styled.div`
+export const NavBtnSecondary = styled.button`
+width: 300px;
+font-size: 18px;
+border: 1px solid #62BCFA;
 text-align: center;
+color: white;
+background-color: Transparent;
+padding: 10px 20px;
 `
 
-const MediumBtn = styled.div`
+export const BtnPrimary = styled.button`
+color: white;
 text-align: center;
-border: 1px solid green;
+background-color: #FA1A3B;
 width: 400px;
 font-size: 20px;
 padding: 10px 0;
 `
 
-const LargeBtn = styled.div`
+export const BtnSecondary = styled.button`
+color: #FA1A3B;
+border: 1px solid #FA1A3B;
 text-align: center;
-border: 1px solid blue;
+width: 400px;
+font-size: 20px;
+padding: 10px 0;
+max-height: 50px;
+margin: 0 auto;
+display: block;
 `
-
-export default (props) => {
-  switch (props.size) {
-    case 'nav':
-    return(
-      <NavBtn onClick={props.onClick}>
-        <p>{props.text}</p>
-      </NavBtn>
-    )
-
-    case 'small':
-    return(
-      <SmallBtn>
-        <p>{props.text}</p>
-      </SmallBtn>
-    )
-
-    case 'medium':
-    return(
-      <MediumBtn onClick={props.onClick}>
-        <p>{props.text}</p>
-      </MediumBtn>
-    )
-
-    case 'large':
-    return(
-      <LargeBtn>
-        <p>{props.text}</p>
-      </LargeBtn>
-    )
-
-    default:
-    return(
-      <MediumBtn>
-        <p>{props.text}</p>
-      </MediumBtn>
-    )
-  }
-}

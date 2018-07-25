@@ -1,7 +1,8 @@
 import React from 'react'
 import {Route, Redirect} from 'react-router-dom'
+import {connect} from 'react-redux'
 
-const isAuthenticated = () => {
+const isAuthenticated = (user) => {
   //add error handling for json parse
   const expiresAt = localStorage.getItem('expiresAt')
   const accessToken = localStorage.getItem('accessToken')
@@ -16,7 +17,7 @@ const isAuthenticated = () => {
 }
 
 const ProtectedRoute = ({component: Component, ...rest}) => {
-  if(isAuthenticated()) {
+  if(isAuthenticated(rest.user)) {
     return(
       <Route {...rest} render={props => {
         return(
@@ -29,5 +30,10 @@ const ProtectedRoute = ({component: Component, ...rest}) => {
   }
 }
 
+const stateToProps = (state) => {
+  return {
+    user: state.user
+  }
+}
 
-export default ProtectedRoute
+export default connect(stateToProps)(ProtectedRoute)

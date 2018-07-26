@@ -410,7 +410,7 @@ export class King extends Piece {
     const column = position[1]
 
     if (this.type === 'Conqueror') {
-      this.possibleMoves.push([[row - 2, column], [row, column + 2], [row + 2, column], [row, column - 2]])
+      this.possibleMoves.push([[row - 2, column]], [[row, column + 2]], [[row + 2, column]], [[row, column - 2]])
     }
     return this.possibleMoves.push([[row, column - 1]], [[row + 1, column + 1]], [[row + 1, column]], [[row + 1, column - 1]], [[row, column + 1]], [[row - 1, column - 1]], [[row - 1, column]], [[row - 1, column + 1]])
   }
@@ -429,7 +429,7 @@ export class Knight extends Piece {
     const column = position[1]
 
     if (this.type === 'Knight') {
-      this.possibleMoves.push([[row - 2, column], [row, column + 2], [row + 2, column], [row, column - 2]])
+      this.possibleMoves.push([[row - 2, column]], [[row, column + 2]], [[row + 2, column]], [[row, column - 2]])
     }
 
     return this.possibleMoves.push([[row - 2, column + 1]], [[row - 1, column + 2]], [[row + 1, column + 2]], [[row + 2, column + 1]], [[row + 2, column - 1]], [[row + 1, column - 2]], [[row - 1, column - 2]], [[row - 2, column - 1]])
@@ -450,12 +450,12 @@ export class Rook extends Piece {
     this.possibleMoves.push([], [], [], [])
 
     if (this.type === 'Crusader') {
-      this.possibleMoves.push([
-        [row - 1, column + 1],
-        [row + 1, column + 1],
-        [row + 1, column - 1],
-        [row - 1, column - 1]
-      ])
+      this.possibleMoves.push(
+        [[row - 1, column + 1]],
+        [[row + 1, column + 1]],
+        [[row + 1, column - 1]],
+        [[row - 1, column - 1]]
+      )
     }
     //North
     for (let i = row - 1; i !== -1; i--) {

@@ -640,11 +640,11 @@ export class Pawn extends Piece {
     }
     if (this.firstMove) {
       if (this.team === 1) {
-        if (board.isTileEmpty([row - 1, column])) {
+        if (board.isTileEmpty([row - 1, column]) && board.isTileEmpty([row - 2, column])) {
           this.possibleMoves.push([[row - 2, column]])
         }
       } else {
-        if (board.isTileEmpty([row + 1, column])) {
+        if (board.isTileEmpty([row + 1, column]) && board.isTileEmpty([row + 2, column])) {
           this.possibleMoves.push([[row + 2, column]])
         }
       }

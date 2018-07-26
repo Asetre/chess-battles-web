@@ -355,39 +355,44 @@ class Piece {
     this.possibleMoves = []
   }
   isSameTeam(piece) {
-    //pieceTeam == 1 or 0
+    //pieceTeam === 1 or 0
     return this.team === piece.team ? true : false
   }
 
   findValidMoves(board) {
     this.findPossibleMoves(board)
 
-    let preValidMoves = this.possibleMoves.map(dir => {
-      let newDir = []
-      if (!Array.isArray(dir)) throw new BoardError('Invalid position')
-      try {
-        dir.forEach(pos => {
-          if (!Board.isOffBoard(pos)) {
-            if (board.isTileEmpty(pos)) {
-              newDir.push(Board.positionToString(pos))
-            }
-            else if (!this.isSameTeam(board.getPosition(pos))) {
-              newDir.push(Board.positionToString(pos))
-              if (this.name === 'White Pawn' || this.name === 'Black Pawn') {
-              } else {
-                throw 'break direction iteration'
-              }
-            } else if (this.isSameTeam(board.getPosition(pos))) {
-              throw 'break direction iteration'
-            }
+    return this.possibleMoves.reduce((acc, curr, index) => {
+      //eslint-disable-next-line
+            //curr === current direction of possible moves
+      for (let i = 0; i < curr.length; i++) {
+        let pos = curr[i]
+        if (!Board.isOffBoard(pos)) {
+          if (board.isTileEmpty(pos)) {
+            acc.push(Board.positionToString(pos))
           }
-        })
-      } catch (err) {
+          else if (!this.isSameTeam(board.getPosition(pos))) {
+            acc.push(Board.positionToString(pos))
+            break
+          } else if (this.isSameTeam(board.getPosition(pos))) {
+            break
+          }
+        }
       }
 
-      return newDir
-    })
-    return [].concat(...preValidMoves)
+      return acc
+    }, [])
+
+    /*
+            let preValidMoves = this.possibleMoves.map(dir => {
+              let newDir = []
+              if (!Array.isArray(dir)) throw new BoardError('Invalid position')
+              dir.forEach((pos) => {
+              })
+              return newDir
+            })
+            return [].concat(...preValidMoves)
+            */
   }
 }
 
@@ -521,7 +526,7 @@ export class Bishop extends Piece {
     }
 
     if (this.type === 'Assasin') {
-      this.possibleMoves.push([[row + 3, column], [row - 3, column]])
+      this.possibleMoves.push([[row + 3, column]], [[row - 3, column]])
     }
 
     return this.possibleMoves

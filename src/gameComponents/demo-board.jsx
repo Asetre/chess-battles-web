@@ -54,6 +54,9 @@ grid-template-areas:
 }
 
 select {
+  padding: 5px 50px;
+  border-bottom: 1px solid black;
+  border-radius: 0;
   font-size: 24px;
   color: #f49542;
   font-family: Liberation Sans;

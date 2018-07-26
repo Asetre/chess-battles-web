@@ -26,6 +26,7 @@ ${BtnSecondary} {
   text-align: center;
   color: #62BCFA;
 }
+margin-bottom: 150px;
 `
 
 const LandingPage = () => {

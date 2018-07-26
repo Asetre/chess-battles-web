@@ -4,6 +4,7 @@ import React, { Component } from 'react'
 
 //Global components
 import Navbar from '../components/navbar'
+import Footer from '../components/footer'
 import ProtectedRoute from '../components/protectedRoute'
 
 //routes
@@ -19,6 +20,7 @@ export default function AppRouter() {
         <Route exact path='/' component={LandingPage} />
         <ProtectedRoute path='/dashboard' component={Dashboard}></ProtectedRoute>
         <ProtectedRoute path='/game/:gameID' component={Game}></ProtectedRoute>
+        <Footer />
       </div>
     </Router>
   )

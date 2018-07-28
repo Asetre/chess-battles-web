@@ -22,8 +22,8 @@ export const addToMatchMakingQue = (userInfo) => {
     })
 }
 
-export const cancelMatchMaking = (matchMakingQueID) => {
-  return axios.post(`${serverUrl}/game/cancelMatchMaking/${this.state.matchMakingQueId}`)
+export const cancelMatchMaking = (matchMakingId) => {
+  return axios.post(`${serverUrl}/game/cancelMatchMaking/${matchMakingId}`)
     .then((res) => {
       return res
     })

@@ -13,6 +13,51 @@
   src: url('./assets/Liberation_Sans/LiberationSans-Regular.ttf')
 }
 
+@keyframes fade {
+    from {border: none}
+    to {border: 2px solid white}
+}
+
+@keyframes pulse {
+    0% {background-color: #ea1300;
+        width: 110px;
+        height: 110px;
+    }
+    12% {
+        width: 112px;
+        height: 112px;
+    }
+    25% {background-color: #ffbb32;
+        width: 115px;
+        height: 115px;
+    }
+    33% {
+        width: 118px;
+        height: 118px;
+    }
+    50% {background-color: #1c4dff;
+        width: 125px;
+        height: 125px;
+    }
+    63% {
+        width: 130px;
+        height: 130px;
+    }
+    75% {background-color: #9514ff;
+        width: 135px;
+        height: 135px;
+    }
+    83% {
+        width: 140px;
+        height: 140px;
+    }
+    100% {background-color: #ff1466;
+        width: 145px;
+        height: 145px;
+    }
+}
+
+
 body {
   margin: 0;
   padding: 0;

@@ -1,72 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
 import {connect} from 'react-redux'
-import Chess, * as Engine from '../chessEngine/chess_engine'
-import {BtnSecondary} from '../components/button'
-import * as actions from '../redux/actions'
+import Chess, * as Engine from '../../../chessEngine/chess_engine'
+import {BtnSecondary} from '../../../components/button'
+import * as actions from '../../../redux/actions'
+import {StyledDemo} from '../styles'
 
 //components
-import Board from './board'
+import Board from '../../../gameComponents/board'
 
-const StyledDemo = styled.div`
-margin: 0 200px;
-display: grid;
-grid-template-columns: 2fr 1fr;
-grid-teplates-rows: 1fr 1fr 1fr 1fr;
-grid-template-areas:
-"board white"
-"board vs"
-"board black"
-"board reset";
-
->.board-container {
-  grid-area: board;
-  width: 700px;
-  height: 700px;
-  margin: auto;
-}
-
-.demo-player-one-container {
-  grid-area: white;
-  padding: 40px 0;
-  >p {
-    color: #95989A;
-    font-family: Liberation Sans;
-    margin: 20px 0;
-  }
-}
-
-.demo-player-two-container {
-  grid-area: black;
-  >p {
-    color: #95989A;
-    font-family: Liberation Sans;
-    margin: 20px 0;
-  }
-}
-
-.demo-vs {
-  grid-area: vs;
-  font-family: Abril Fatface;
-  font-size: 20px;
-  color: #FC4E68;
-  text-align: center;
-}
-
-select {
-  padding: 5px 50px;
-  border-bottom: 1px solid black;
-  border-radius: 0;
-  font-size: 24px;
-  color: #f49542;
-  font-family: Liberation Sans;
-  appearance: none;
-  background: #fff url('https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_keyboard_arrow_down_48px-128.png') no-repeat;
-   background-size: 20px;
-    background-position:  right 10px center;
-    display: block;
-}
-`
 class DemoBoard extends React.Component {
   constructor() {
     super()

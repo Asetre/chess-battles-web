@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import { connect } from 'react-redux'
 import Chess from '../chessEngine/chess_engine'
 
 const checkeredColor = '#f49542'

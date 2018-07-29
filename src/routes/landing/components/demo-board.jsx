@@ -87,7 +87,7 @@ class DemoBoard extends React.Component {
         <div className='board-container'>
           <Board ref={(instance) => this.child = instance} {...this.state.config}/>
         </div>
-        <div className='demo-player-one-container'>
+        <div className='demo-player-one-container player-container'>
           <select onChange={this.handleSelectChange}>
             <option value="Assasin0">Assasin</option>
             <option value="Conqueror0">Conqueror</option>
@@ -98,7 +98,7 @@ class DemoBoard extends React.Component {
           <p className="type-description">{this.getTypeInfo(this.state.black.type)}</p>
         </div>
         <p className='demo-vs'>VS</p>
-        <div className='demo-player-two-container'>
+        <div className='demo-player-two-container player-container'>
           <select onChange={this.handleSelectChange}>
             <option value="Assasin1">Assasin</option>
             <option value="Conqueror1">Conqueror</option>

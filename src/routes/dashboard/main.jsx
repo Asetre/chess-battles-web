@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import { serverUrl } from '../../config'
 import * as gameRepository from '../../repository/gameRepository'
 import {StyledDashboard, StyledLoadingScreen} from './styles'
+import {BtnPrimary} from '../../components/button'
 
 class Dashboard extends React.Component {
 
@@ -123,7 +124,7 @@ class Dashboard extends React.Component {
           <option value="Mercenary">Mercenary</option>
         </select>
 
-        <button onClick={this.handleGameSearch}>Search for game as: {this.state.selectedType}</button>
+        <BtnPrimary onClick={this.handleGameSearch}>Search for a game as: {this.state.selectedType} </BtnPrimary>
       </StyledDashboard>
     )
   }

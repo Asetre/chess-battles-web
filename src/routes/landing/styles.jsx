@@ -1,23 +1,29 @@
 import styled from 'styled-components'
-import {BtnPrimary, BtnSecondary} from '../../components/button'
+import { BtnPrimary, BtnSecondary } from '../../components/button'
 import img from '../../assets/battle-1846807_1280.jpg'
 
 export const StyledDemo = styled.div`
-margin: 0 200px;
+box-sizing: border-box;
+width: 100%;
+padding: 0 100px;
 display: grid;
-grid-template-columns: 2fr 1fr;
-grid-teplates-rows: 1fr 1fr 1fr 1fr;
+column-gap: 50px;
 grid-template-areas:
 "board white"
 "board vs"
 "board black"
 "board reset";
 
->.board-container {
+
+${BtnSecondary} {
+  grid-area: reset;
+}
+
+.board-container {
   grid-area: board;
+  justify-self: end;
   width: 700px;
   height: 700px;
-  margin: auto;
 }
 
 .demo-player-one-container {
@@ -60,6 +66,55 @@ select {
     background-position:  right 10px center;
     display: block;
 }
+
+@media (max-width: 1300px) {
+  grid-template-areas:
+  "white vs black"
+  "reset reset reset"
+  "board board board";
+
+  .board-container {
+    justify-self: center;
+  }
+
+  .demo-player-one-container {
+    padding: 0;
+  }
+
+  .player-container {
+    max-width: 350px;
+  }
+  ${BtnSecondary} {
+    justify-self: center;
+  }
+
+  select {
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 950px) {
+  padding: 0 10px;
+  .board-container {
+    width: 90%;
+  }
+}
+
+@media (max-width: 570px) {
+  grid-template-areas:
+  "white"
+  "vs"
+  "black"
+  "reset"
+  "board";
+  justify-content: center;
+
+  column-gap: none;
+
+  .board-container {
+    width: 100%;
+  }
+}
 `
 
 export const Hero = styled.div`
@@ -91,9 +146,14 @@ position: absolute;
 
 export const HeroHeader = styled.h1`
 margin-bottom: 200px;
+margin-left: 40px;
+margin-right: 40px;
 font-family: Butler;
 font-size: 46px;
 color: white;
+@media (max-width: 550px) {
+  font-size: 30px;
+}
 `
 
 export const DemoSection = styled.div`

@@ -11,6 +11,10 @@ injectGlobal`
   font-family: 'Butler';
   src: url('./assets/Butler/Butler_Black.otf');
 }
+
+a {
+  text-decoration: none;
+}
 `
 class App extends Component {
   render() {

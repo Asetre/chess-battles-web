@@ -23,6 +23,7 @@ width: 100%;
 border: 1px solid #e8a400;;
 display: flex;
 flex-wrap: wrap;
+background-color: white;
 
 > div {
   margin: 0;

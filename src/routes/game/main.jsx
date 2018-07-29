@@ -1,5 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import {StyledGameBoard} from './styles'
 
 // components
 import GameBoard from './components/game-board'
@@ -11,17 +12,14 @@ class Game extends React.Component {
     this.gameID = match.params.gameID
   }
 
-  componentDidMount () {
-  }
-
-  componentWillUnmount () {
-  }
 
   render () {
     return (
-      <div className="board-container">
-        <GameBoard gameID={this.gameID}/>
-      </div>
+      <StyledGameBoard>
+        <div className="board-container">
+          <GameBoard gameID={this.gameID}/>
+        </div>
+      </StyledGameBoard>
     )
   }
 }

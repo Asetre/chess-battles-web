@@ -1,11 +1,18 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import {NavBtnPrimary, NavBtnSecondary} from './button'
+import { NavBtnPrimary, NavBtnSecondary } from './button'
 import * as actions from '../redux/actions'
-import {withRouter} from 'react-router-dom'
-import {lock} from '../repository/user-repository'
+import { withRouter, Link} from 'react-router-dom'
+import { lock } from '../repository/user-repository'
 
+const StyledBtnContainer = styled.div`
+display: flex;
+padding: 0 20px;
+>div {
+  margin: 0 20px;
+}
+`
 
 const StyledNavbar = styled.div`
 position: absolute;
@@ -15,14 +22,14 @@ align-items: center;
 justify-content: space-between;
 height: 100px;
 width: 100%;
-`
 
-const StyledBtnContainer =  styled.div`
-display: flex;
->div {
-  margin: 0 20px;
+@media (max-width: 950px) {
+  ${StyledBtnContainer} {
+    display: none;
+  }
 }
 `
+
 
 const Logo = styled.a`
 color: white;
@@ -37,14 +44,14 @@ class Navbar extends React.Component {
     super()
     this.handleLogin = this.handleLogin.bind(this)
     this.handleSignup = this.handleSignup.bind(this)
+    this.handleLogout = this.handleLogout.bind(this)
+    this.handleDashboard = this.handleDashboard.bind(this)
 
     this.state = {
       loggedIn: false
     }
 
   }
-
-
 
   handleLogin() {
     lock.show()
@@ -54,17 +61,36 @@ class Navbar extends React.Component {
     lock.show()
   }
 
+  handleLogout() {
+    this.props.updateUserProfile(null)
+  }
+
+  handleDashboard() {
+    this.props.history.push('/dashboard')
+  }
+
   render() {
+    let user = this.props.user
+
     return (
       <StyledNavbar>
-        <Logo>
+        <Link to='/'>
+          <Logo>
           Chess Battles
-        </Logo>
+          </Logo>
+        </Link>
 
-        <StyledBtnContainer>
-          <NavBtnSecondary onClick={this.handleLogin}>Login</NavBtnSecondary>
-          <NavBtnPrimary onClick={() => console.log('sign up')}>Sign up</NavBtnPrimary>
-        </StyledBtnContainer>
+        {!user
+          ? <StyledBtnContainer>
+            <NavBtnSecondary onClick={this.handleLogin}>Login</NavBtnSecondary>
+            <NavBtnPrimary onClick={() => console.log('sign up')}>Sign up</NavBtnPrimary>
+          </StyledBtnContainer>
+          : <StyledBtnContainer>
+            <NavBtnPrimary onClick={this.handleDashboard}>Dashboard</NavBtnPrimary>
+            <NavBtnSecondary onClick={this.handleLogout}>Logout</NavBtnSecondary>
+          </StyledBtnContainer>
+        }
+
       </StyledNavbar>
     )
   }

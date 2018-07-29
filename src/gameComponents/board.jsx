@@ -19,8 +19,8 @@ import wP from '../assets/wP.png'
 import Tile from './tile'
 
 const StyledBoard = styled.div`
-width: 80%;
-border: 1px solid red;
+width: 100%;
+border: 1px solid #e8a400;;
 display: flex;
 flex-wrap: wrap;
 

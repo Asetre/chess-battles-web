@@ -1,5 +1,5 @@
 import Chess, * as Engine from '../chessEngine/chess_engine'
-import * as GameRepository from './gameRepository'
+import * as GameRepository from '../repository/gameRepository'
 
 export const identifyUserColorAndClass = (users, userID) => {
   let formatedUsers = formatUsersToIdentify(users)

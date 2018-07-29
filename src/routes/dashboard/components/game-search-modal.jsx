@@ -1,8 +1,8 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { Redirect, withRouter } from 'react-router-dom'
+import React from '../../../../../../Library/Caches/typescript/2.9/node_modules/@types/react'
+import { connect } from '../../../../../../Library/Caches/typescript/2.9/node_modules/@types/react-redux'
+import { Redirect, withRouter } from '../../../../../../Library/Caches/typescript/2.9/node_modules/@types/react-router-dom'
 import styled from 'styled-components'
-import Btn from '../../../components/button'
+import {BtnPrimary} from '../../../components/button'
 import { serverUrl } from '../../../config'
 import * as actions from '../../../redux/actions'
 import * as gameRepository from '../../../repository/game'
@@ -91,8 +91,10 @@ class GameSearchModal extends React.Component {
           <option value="Mercenary">Mercenary</option>
         </select>
 
-        <Btn text='Search for game' size='medium' onClick={this.findGame} />
-        <Btn text='Cancel search' size='medium' onClick={this.cancelMatchMaking} />
+
+
+        <BtnPrimary onClick={this.findGame}>Search for game</BtnPrimary>
+        <BtnPrimary onClick={this.cancelMatchMaking}>Cancel search</BtnPrimary>
       </StyledGameSearchModal>
     )
   }

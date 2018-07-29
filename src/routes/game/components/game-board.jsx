@@ -1,14 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import styled from 'styled-components'
-import Chess, * as Engine from '../chessEngine/chess_engine'
-import * as GameRepository from './gameRepository'
-import * as GameService from './gameService'
+import Chess, * as Engine from '../../../chessEngine/chess_engine'
+import * as GameRepository from '../../../repository/gameRepository'
+import * as GameService from '../../../service/gameService'
+import {StyledGameBoard} from '../styles'
+import Board from '../../../gameComponents/board'
 
-import Board from './board'
-
-const StyledGameBoard = styled.div`
-`
 
 class GameBoard extends React.PureComponent {
   constructor(props) {

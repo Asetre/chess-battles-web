@@ -2,15 +2,11 @@ import * as actions from './actions'
 
 export var initialBoardState = {
   user: null,
-  board: null,
-  validMoves: [],
-  pieceSelected: null,
   gameID: null
 }
 
 export default function reducer(state=initialBoardState, action) {
   let payload = action.payload
-
 
   switch (action.type) {
   case actions.update_user_profile:

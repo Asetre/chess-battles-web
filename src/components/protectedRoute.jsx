@@ -1,33 +1,47 @@
 import React from 'react'
 import {Route, Redirect} from 'react-router-dom'
+import {connect} from 'react-redux'
 
-const isAuthenticated = () => {
+const isAuthenticated = (user) => {
   //add error handling for json parse
-  const expiresAt = localStorage.getItem('expiresAt')
-  const accessToken = localStorage.getItem('accessToken')
+  let expiresAt = localStorage.getItem('expiresAt')
+  let accessToken = localStorage.getItem('accessToken')
 
-  const tokenNotExpired =  new Date().getTime() < expiresAt
-  const accessTokenAvailable = accessToken
+  let tokenNotExpired =  new Date().getTime() < expiresAt
+  let accessTokenAvailable = accessToken
 
-  if(tokenNotExpired && accessTokenAvailable) {
-    return true
-  }
-  return false
+  if(tokenNotExpired && accessTokenAvailable && user) return true
+  else return false
 }
 
-const ProtectedRoute = ({component: Component, ...rest}) => {
-  if(isAuthenticated()) {
+const ProtectedRoute = (props) => {
+  if(props.component) {
     return(
-      <Route {...rest} render={props => {
+      React.cloneElement(props.component)
+    )
+  }else return null
+}
+
+/*
+const ProtectedRoute = ({component: Component, ...rest}) => {
+  if(rest.user) {
+    return(
+      <Route {...rest} render={(props) => {
         return(
-          <Component {...props} />
+          isAuthenticated(rest.user)
+            ? <Component {...props}/>
+            : <Redirect to='/' />
         )
       }}/>
     )
-  }else {
-    return <Redirect to='/'/>
+  }else return null
+}
+*/
+
+const stateToProps = (state) => {
+  return {
+    user: state.user
   }
 }
 
-
-export default ProtectedRoute
+export default connect(stateToProps)(ProtectedRoute)

@@ -51,9 +51,9 @@ export class Board {
 
     pawnPositions.forEach((pos) => {
       let side = pos[0]
-      if(side === '1') {
+      if (side === '1') {
         this.placePiece(new Pawn(0, p2.type), pos)
-      }else if(side === '6') {
+      } else if (side === '6') {
         this.placePiece(new Pawn(1, p1.type), pos)
       }
     })
@@ -355,39 +355,44 @@ class Piece {
     this.possibleMoves = []
   }
   isSameTeam(piece) {
-    //pieceTeam == 1 or 0
+    //pieceTeam === 1 or 0
     return this.team === piece.team ? true : false
   }
 
   findValidMoves(board) {
     this.findPossibleMoves(board)
 
-    let preValidMoves = this.possibleMoves.map(dir => {
-      let newDir = []
-      if (!Array.isArray(dir)) throw new BoardError('Invalid position')
-      try {
-        dir.forEach(pos => {
-          if (!Board.isOffBoard(pos)) {
-            if (board.isTileEmpty(pos)) {
-              newDir.push(Board.positionToString(pos))
-            }
-            else if (!this.isSameTeam(board.getPosition(pos))) {
-              newDir.push(Board.positionToString(pos))
-              if (this.name === 'White Pawn' || this.name === 'Black Pawn') {
-              } else {
-                throw 'break direction iteration'
-              }
-            } else if (this.isSameTeam(board.getPosition(pos))) {
-              throw 'break direction iteration'
-            }
+    return this.possibleMoves.reduce((acc, curr, index) => {
+      //eslint-disable-next-line
+            //curr === current direction of possible moves
+      for (let i = 0; i < curr.length; i++) {
+        let pos = curr[i]
+        if (!Board.isOffBoard(pos)) {
+          if (board.isTileEmpty(pos)) {
+            acc.push(Board.positionToString(pos))
           }
-        })
-      } catch (err) {
+          else if (!this.isSameTeam(board.getPosition(pos))) {
+            acc.push(Board.positionToString(pos))
+            break
+          } else if (this.isSameTeam(board.getPosition(pos))) {
+            break
+          }
+        }
       }
 
-      return newDir
-    })
-    return [].concat(...preValidMoves)
+      return acc
+    }, [])
+
+    /*
+            let preValidMoves = this.possibleMoves.map(dir => {
+              let newDir = []
+              if (!Array.isArray(dir)) throw new BoardError('Invalid position')
+              dir.forEach((pos) => {
+              })
+              return newDir
+            })
+            return [].concat(...preValidMoves)
+            */
   }
 }
 
@@ -405,7 +410,7 @@ export class King extends Piece {
     const column = position[1]
 
     if (this.type === 'Conqueror') {
-      this.possibleMoves.push([[row - 2, column], [row, column + 2], [row + 2, column], [row, column - 2]])
+      this.possibleMoves.push([[row - 2, column]], [[row, column + 2]], [[row + 2, column]], [[row, column - 2]])
     }
     return this.possibleMoves.push([[row, column - 1]], [[row + 1, column + 1]], [[row + 1, column]], [[row + 1, column - 1]], [[row, column + 1]], [[row - 1, column - 1]], [[row - 1, column]], [[row - 1, column + 1]])
   }
@@ -424,7 +429,7 @@ export class Knight extends Piece {
     const column = position[1]
 
     if (this.type === 'Knight') {
-      this.possibleMoves.push([[row - 2, column], [row, column + 2], [row + 2, column], [row, column - 2]])
+      this.possibleMoves.push([[row - 2, column]], [[row, column + 2]], [[row + 2, column]], [[row, column - 2]])
     }
 
     return this.possibleMoves.push([[row - 2, column + 1]], [[row - 1, column + 2]], [[row + 1, column + 2]], [[row + 2, column + 1]], [[row + 2, column - 1]], [[row + 1, column - 2]], [[row - 1, column - 2]], [[row - 2, column - 1]])
@@ -445,12 +450,12 @@ export class Rook extends Piece {
     this.possibleMoves.push([], [], [], [])
 
     if (this.type === 'Crusader') {
-      this.possibleMoves.push([
-        [row - 1, column + 1],
-        [row + 1, column + 1],
-        [row + 1, column - 1],
-        [row - 1, column - 1]
-      ])
+      this.possibleMoves.push(
+        [[row - 1, column + 1]],
+        [[row + 1, column + 1]],
+        [[row + 1, column - 1]],
+        [[row - 1, column - 1]]
+      )
     }
     //North
     for (let i = row - 1; i !== -1; i--) {
@@ -521,7 +526,7 @@ export class Bishop extends Piece {
     }
 
     if (this.type === 'Assasin') {
-      this.possibleMoves.push([[row + 3, column], [row - 3, column]])
+      this.possibleMoves.push([[row + 3, column]], [[row - 3, column]])
     }
 
     return this.possibleMoves
@@ -640,11 +645,11 @@ export class Pawn extends Piece {
     }
     if (this.firstMove) {
       if (this.team === 1) {
-        if (board.isTileEmpty([row - 1, column])) {
+        if (board.isTileEmpty([row - 1, column]) && board.isTileEmpty([row - 2, column])) {
           this.possibleMoves.push([[row - 2, column]])
         }
       } else {
-        if (board.isTileEmpty([row + 1, column])) {
+        if (board.isTileEmpty([row + 1, column]) && board.isTileEmpty([row + 2, column])) {
           this.possibleMoves.push([[row + 2, column]])
         }
       }

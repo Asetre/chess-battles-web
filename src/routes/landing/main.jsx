@@ -1,21 +1,26 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import styled from 'styled-components'
+import {BtnSecondary} from '../../components/button'
 
 //Components
 import Hero from './components/hero'
-import DemoBoard from '../../gameComponents/demo-board'
-import Btn from '../../components/button'
+import DemoBoard from './components/demo-board'
+import {StyledLanding, DemoSection} from './styles'
 
-const StyledLanding = styled.div`
-`
 
-var LandingPage = () => {
+const LandingPage = () => {
   return (
     <StyledLanding>
       <Hero />
-      <DemoBoard />
+
+      <DemoSection>
+        <h2>Each class has a unique advantage</h2>
+        <DemoBoard/>
+      </DemoSection>
+
+      <BtnSecondary className='cta-secondary'>Sign up to get started</BtnSecondary>
+      <p className='cta-login'>Login</p>
       <Link to='/dashboard'>Dashboard</Link>
     </StyledLanding>
   )

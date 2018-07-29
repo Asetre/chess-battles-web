@@ -1,14 +1,9 @@
 import React from 'react'
-import {Redirect, Link} from 'react-router-dom'
 import {connect} from 'react-redux'
-import styled from 'styled-components'
-import firebase from 'firebase'
 
 // components
-import GameBoard from '../../gameComponents/game-board'
+import GameBoard from './components/game-board'
 
-const StyledBoard = styled.div`
-`
 class Game extends React.Component {
   constructor ({match}) {
     super()
@@ -24,7 +19,9 @@ class Game extends React.Component {
 
   render () {
     return (
-      <GameBoard gameID={this.gameID}/>
+      <div className="board-container">
+        <GameBoard gameID={this.gameID}/>
+      </div>
     )
   }
 }

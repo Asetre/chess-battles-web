@@ -1,16 +1,9 @@
 import React, { Component } from 'react'
 import './App.css'
 import styled, {injectGlobal} from 'styled-components'
-
-//Redux
-import reducer from './redux/reducers'
-import {createStore} from 'redux'
+import {store} from './redux/store'
 import {Provider} from 'react-redux'
-
-//routes
 import AppRouter from './routes/router'
-
-var store = createStore(reducer)
 
 //Global styles
 injectGlobal`

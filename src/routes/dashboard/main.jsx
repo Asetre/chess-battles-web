@@ -33,6 +33,8 @@ class Dashboard extends React.Component {
   async handleGameSearch() {
     let { user } = this.props
 
+    if(this.state.loading && this.matchMakingRef) return
+
     let userMatchMakingInfo = {
       id: user._id,
       username: user.username,

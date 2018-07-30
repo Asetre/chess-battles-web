@@ -21,7 +21,6 @@ const LandingPage = () => {
 
       <BtnSecondary className='cta-secondary'>Sign up to get started</BtnSecondary>
       <p className='cta-login'>Login</p>
-      <Link to='/dashboard'>Dashboard</Link>
     </StyledLanding>
   )
 }

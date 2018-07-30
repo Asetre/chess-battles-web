@@ -1,10 +1,11 @@
-export const firebaseUrl = null
-export const serverUrl = 'http://localhost:8000'
+export const serverUrl = process.env.serverUrl || 'http://localhost:8000'
+export const gameServerUrl = process.env.gameServerUrl || 'http://localhost:8080'
+
 export const firebaseConfig = {
-  apiKey: 'AIzaSyAhmEUCA4_nLb9riGG0WpeKmzPXeneYmog',
-  authDomain: 'chess-battles-85633.firebaseapp.com',
-  databaseURL: 'https://chess-battles-85633.firebaseio.com',
-  projectId: 'chess-battles-85633',
-  storageBucket: 'chess-battles-85633.appspot.com',
-  messagingSenderId: '1052100348307'
+  apiKey: process.env.firebase_apiKey || 'AIzaSyAhmEUCA4_nLb9riGG0WpeKmzPXeneYmog',
+  authDomain: process.env.firebase_authDomain || 'chess-battles-85633.firebaseapp.com',
+  databaseURL: process.env.firebase_databaseUrl || 'https://chess-battles-85633.firebaseio.com',
+  projectId: process.env.firebase_projectID || 'chess-battles-85633',
+  storageBucket: process.env.firebase_storageBucket || 'chess-battles-85633.appspot.com',
+  messagingSenderId: process.env.firebase_messaginSenderID || '1052100348307'
 }

@@ -1,8 +1,7 @@
 import firebase from 'firebase'
 import io from 'socket.io-client'
 import axios from 'axios'
-import {serverUrl} from '../config'
-import {firebaseConfig} from '../config'
+import {serverUrl, firebaseConfig, gameServerUrl} from '../config'
 
 firebase.initializeApp(firebaseConfig)
 const database = firebase.database()
@@ -14,7 +13,7 @@ var matchMakingRef = null
 
 export const initializeListeners = (gameID) => {
   gameRef = database.ref(`/games/${gameID}`)
-  return socket = io('http://localhost:8080')
+  return socket = io(`${gameServerUrl}`)
 }
 
 export const initializeMatchMakingListener = (matchMakingID) => {

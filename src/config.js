@@ -1,4 +1,4 @@
-export const serverUrl = 'https://ec2-18-222-141-248.us-east-2.compute.amazonaws.com'
+export const serverUrl = 'https://chess-server-1520337744.us-east-2.elb.amazonaws.com'
 export const gameServerUrl = process.env.gameServerUrl || 'http://localhost:8080'
 
 export const firebaseConfig = {

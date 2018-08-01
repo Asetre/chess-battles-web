@@ -1,5 +1,5 @@
 export const serverUrl = 'https://gurren.paulasetre.com'
-export const gameServerUrl = process.env.gameServerUrl || 'http://localhost:8080'
+export const gameServerUrl = 'https://lagann.paulasetre.com'
 
 export const firebaseConfig = {
   apiKey: process.env.firebase_apiKey || 'AIzaSyAhmEUCA4_nLb9riGG0WpeKmzPXeneYmog',

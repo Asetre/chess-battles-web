@@ -74,11 +74,9 @@ class Navbar extends React.Component {
 
     return (
       <StyledNavbar>
-        <Link to='/'>
-          <Logo>
+        <Logo>
           Chess Battles
-          </Logo>
-        </Link>
+        </Logo>
 
         {!user
           ? <StyledBtnContainer>

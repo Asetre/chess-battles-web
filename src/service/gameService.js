@@ -45,7 +45,8 @@ const formatUsersToIdentify = (users) => {
       formatedUser = {
         id: user.id,
         color: index,
-        type: user.type
+        type: user.type,
+        username: user.username
       }
     acc.push(formatedUser)
     return acc

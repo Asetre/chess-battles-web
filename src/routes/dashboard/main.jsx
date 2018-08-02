@@ -5,6 +5,7 @@ import { serverUrl } from '../../config'
 import * as gameRepository from '../../repository/gameRepository'
 import {StyledDashboard, StyledLoadingScreen} from './styles'
 import {BtnPrimary} from '../../components/button'
+import TypeSelector from './components/dropdown-select'
 
 class Dashboard extends React.Component {
 
@@ -18,7 +19,6 @@ class Dashboard extends React.Component {
       redirect: null
     }
 
-    this.handleSelectChange = this.handleSelectChange.bind(this)
     this.handleGameSearch = this.handleGameSearch.bind(this)
     this.cancelMatchMaking = this.cancelMatchMaking.bind(this)
     this.setupEventListeners = this.setupEventListeners.bind(this)
@@ -31,7 +31,7 @@ class Dashboard extends React.Component {
     }
   }  
 
-  async handleGameSearch() {
+  async handleGameSearch(name) {
     let { user } = this.props
 
     if(this.state.loading && this.matchMakingRef) return
@@ -39,7 +39,7 @@ class Dashboard extends React.Component {
     let userMatchMakingInfo = {
       id: user._id,
       username: user.username,
-      type: this.state.selectedType,
+      type: name,
       win: user.win,
       loss: user.loss
     }
@@ -49,12 +49,6 @@ class Dashboard extends React.Component {
     this.setState({matchMakingID})
     this.setupEventListeners()
     this.setState({loading: true})
-  }
-
-  handleSelectChange(e) {
-    let selectedType = e.target.value
-
-    this.setState({selectedType})
   }
 
   setupEventListeners() {
@@ -102,7 +96,7 @@ class Dashboard extends React.Component {
               </div>
             </div>
           </div>
-          <button onClick={this.cancelMatchMaking}>Cancel</button>
+          <button className='loading-btn-cancel' onClick={this.cancelMatchMaking}>Cancel</button>
         </StyledLoadingScreen>
       )
     }
@@ -116,15 +110,8 @@ class Dashboard extends React.Component {
           <p>loss: {user ? user.loss : null}</p>
         </div>
 
-        <select onChange={this.handleSelectChange}>
-          <option value="Assasin">Assasin</option>
-          <option value="Conqueror">Conqueror</option>
-          <option value="Crusader">Crusader</option>
-          <option value="Knight">Knight</option>
-          <option value="Mercenary">Mercenary</option>
-        </select>
+        <TypeSelector handleGameSearch={this.handleGameSearch}/>
 
-        <BtnPrimary onClick={this.handleGameSearch}>Search for a game as: {this.state.selectedType} </BtnPrimary>
       </StyledDashboard>
     )
   }

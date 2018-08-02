@@ -17,6 +17,13 @@ align-items: center;
 background-color: rgba(53, 53, 53, .8);
 }
 
+.loading-btn-cancel {
+  font-size: 20px;
+  padding: 5px 50px;
+  color: white;
+  background-color: #FC4E68;
+}
+
 h2 {
   color: white;
   font-family: Abril Fatface;
@@ -107,5 +114,89 @@ p {
 
 button, select {
   font-size: 20px;
+}
+
+select {
+  border-radius: 0;
+}
+`
+
+export const StyledTextContainer = styled.div`
+box-sizing: border-box;
+width: 100%;
+padding: 10px 20px;
+position: relative;
+background-color: white;
+grid-area: text
+display: flex;
+justify-content: center;
+align-items: center;
+
+p {
+  font-size: 22px;
+  color: black;
+}
+
+`
+export const StyledMatchSelector = styled.div`
+width: 100%;
+grid-area: matchBtn;
+background-color: #FC4E68;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+
+>p {
+  color: white;
+}
+`
+
+export const StyledTypeSelectorDrawer = styled.div`
+display: ${(props) => props.drawerOpen ? 'block' : 'none'}
+grid-area: dropdown;
+background-color: white;
+width: 100%;
+box-sizing: border-box;
+
+.drawer-element {
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}
+
+p {
+  color: black;
+  font-size: 18px;
+  text-align: center;
+}
+
+.drawer-element {
+  padding: 10px 0;
+  width: 100%;
+}
+`
+export const StyledTypeSelector = styled.div`
+width: 800px;
+margin: 0 auto;
+display: grid;
+grid-template-columns: 1fr auto 1fr;
+grid-template-areas:
+"text arrow matchBtn"
+"dropdown null null";
+
+.box-arrow-down-container {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  grid-area: arrow;
+  border-left: 1px solid black;
+  border-right: 1px solid black; 
+
+  p {
+    color: black;
+  }
 }
 `

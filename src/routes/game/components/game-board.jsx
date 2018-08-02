@@ -73,6 +73,7 @@ class GameBoard extends React.PureComponent {
     }
     this.setState({gameInitialized: true})
     this.child.checkKings()
+    console.log(this.state)
   }
 
   setupEventListeners() {
@@ -131,7 +132,15 @@ class GameBoard extends React.PureComponent {
   render() {
     let state = this.state
     return (
-      <Board ref={(instance) => this.child = instance} {...this.config} gameInitialized={state.gameInitialized} turn={state.turn} userTeam={state.userGameInfo.color} gameOver={state.gameOver}/>
+      <div className="game-board-container">
+        <Board ref={(instance) => this.child = instance} {...this.config} gameInitialized={state.gameInitialized} turn={state.turn} userTeam={state.userGameInfo.color} gameOver={state.gameOver}/>
+        <div className="game-info-panel">
+          <p className="player-name player-one">{state.userGameInfo.username}({state.userGameInfo.type})</p>
+          <p className='player-vs'>vs</p>
+          <p className="player-name player-two">{state.opponentGameInfo.username}({state.opponentGameInfo.type})</p>
+          <button className='btn-quit'>Quit game</button>
+        </div>
+      </div>
     )
   }
 }

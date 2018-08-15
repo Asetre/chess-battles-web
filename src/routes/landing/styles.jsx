@@ -123,10 +123,6 @@ height: 850px;
 background: linear-gradient(#6534FF, #331A80);
 position: relative;
 clip-path: polygon(0 0, 100% 0, 100% 90%, 0% 100%);
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
 
 ${BtnPrimary} {
   font-size: 30px;

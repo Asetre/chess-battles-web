@@ -21,15 +21,13 @@ p {
 
 .links-container {
   height: 100%;
-  display: flex;
-  flex-direction: column;
   justify-content: space-around;
 }
 `
 
 export default () => {
   return(
-    <StyledFooter>
+    <StyledFooter className="flex flex-col">
       <div className="links-container">
         <a href="#" className="footer-link">Github</a>
         <a href="#" className="footer-link">Signup</a>

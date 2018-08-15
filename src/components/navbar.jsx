@@ -7,7 +7,6 @@ import { withRouter, Link} from 'react-router-dom'
 import { lock } from '../repository/user-repository'
 
 const StyledBtnContainer = styled.div`
-display: flex;
 padding: 0 20px;
 >div {
   margin: 0 20px;

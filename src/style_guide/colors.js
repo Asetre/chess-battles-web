@@ -1,0 +1,5 @@
+export const cb_red = '#FA1A3B'
+export const cb_orange = '#f49542'
+export const cb_purple_text = '#4D24CE'
+export const cb_purple_bg = '#6534FF'
+export const cb_light_blue = '#62BCFA'

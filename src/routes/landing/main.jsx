@@ -8,7 +8,6 @@ import Hero from './components/hero'
 import DemoBoard from './components/demo-board'
 import {StyledLanding, DemoSection} from './styles'
 
-
 const LandingPage = () => {
   return (
     <StyledLanding>
@@ -19,8 +18,8 @@ const LandingPage = () => {
         <DemoBoard/>
       </DemoSection>
 
-      <BtnSecondary className='cta-secondary'>Sign up to get started</BtnSecondary>
-      <p className='cta-login'>Login</p>
+      <BtnSecondary className="cta-secondary">Sign up to get started</BtnSecondary>
+      <p className="cta-login">Login</p>
     </StyledLanding>
   )
 }
